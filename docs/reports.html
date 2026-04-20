@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AERIS-10 Docs | Reports</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="index.html">AERIS-10 Docs</a>
+      <nav>
+        <a href="architecture.html">Architecture</a>
+        <a href="implementation-log.html">Implementation Log</a>
+        <a href="bring-up.html">Bring-Up</a>
+        <a href="reports.html">Reports</a>
+        <a href="release-notes.html">Release Notes</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    <section class="hero">
+      <p class="eyebrow">Artifacts</p>
+      <h1>Published Reports and Visuals</h1>
+      <p>Central access point for antenna simulations, implementation summaries, timing baselines, and board-day artifact references.</p>
+      <div class="cta-row">
+        <a class="button" href="board-day-worksheet.html">Open Board-Day Worksheet</a>
+        <a class="button ghost" href="bring-up.html">Open Bring-Up Plan</a>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>Current FPGA implementation status</h2>
+      <ul>
+        <li><strong>Build 25</strong> is the current production baseline for the XC7A200T target. All timing constraints met. Includes MTI canceller + DC notch filter integration on top of CA-CFAR.</li>
+        <li>Build 25 reports are available on the remote Vivado host at <code>~/PLFM_RADAR_work/vivado_project/reports_build25/</code>.</li>
+        <li>Build 24 (v0.1.5-cfar) retained as pre-MTI reference at <code>reports_build24/</code>.</li>
+        <li>Build 21 (v0.1.4-build21) retained as pre-CFAR reference at <code>reports_build21/</code>.</li>
+      </ul>
+    </section>
+
+    <!-- ===== Build 25 — 15-Point Report ===== -->
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>Build 25 &mdash; 15-Point Engineering Report</h2>
+      <p><span class="chip">Status: PASS &mdash; Production-safe bitstream generated</span></p>
+      <p class="muted">Date: 2026-03-20 &nbsp;|&nbsp; Commit: <code>ed629e7</code> &nbsp;|&nbsp; Device: XC7A200T-2FBG484I &nbsp;|&nbsp; Vivado 2025.2</p>
+
+      <!-- 1. Timing -->
+      <h3>1. Timing Summary</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Clock Domain</th><th>Period (ns)</th><th>WNS (ns)</th><th>WHS (ns)</th><th>WPWS (ns)</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>clk_100m</td><td>10.000</td><td>+0.634</td><td>+0.058</td><td>+3.870</td><td>PASS</td></tr>
+            <tr><td>clk_mmcm_out0 (400 MHz)</td><td>2.500</td><td>+0.304</td><td>+0.115</td><td>+0.684</td><td>PASS</td></tr>
+            <tr><td>adc_dco_p</td><td>&mdash;</td><td>+0.904</td><td>&mdash;</td><td>+0.361</td><td>PASS</td></tr>
+            <tr><td>ft601_clk_in</td><td>10.000</td><td>+0.132</td><td>+0.121</td><td>+4.500</td><td>PASS</td></tr>
+            <tr><td>clk_120m_dac</td><td>&mdash;</td><td>+0.773</td><td>+0.151</td><td>+3.666</td><td>PASS</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">TNS = 0.000 ns, THS = 0.000 ns across all domains. Zero failing endpoints. Overall WNS +0.132 ns (ft601_clk_in domain, USB FSM path). Overall WHS +0.058 ns.</p>
+
+      <!-- 2. Utilization -->
+      <h3>2. Utilization (Post-Route)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Resource</th><th>Build 24 (CFAR)</th><th>Build 25 (MTI)</th><th>Available</th><th>Util%</th><th>Delta</th></tr></thead>
+          <tbody>
+            <tr><td>Slice LUTs</td><td>8,558</td><td>9,252</td><td>134,600</td><td>6.87%</td><td>+694 (+8.1%)</td></tr>
+            <tr><td>Slice Registers (FFs)</td><td>10,384</td><td>12,488</td><td>269,200</td><td>4.64%</td><td>+2,104 (+20%)</td></tr>
+            <tr><td>Block RAM Tiles</td><td>17</td><td>17</td><td>365</td><td>4.66%</td><td>0</td></tr>
+            <tr><td>&nbsp;&nbsp;RAMB36E1</td><td>12</td><td>12</td><td>365</td><td>3.29%</td><td>0</td></tr>
+            <tr><td>&nbsp;&nbsp;RAMB18E1</td><td>10</td><td>10</td><td>730</td><td>1.37%</td><td>0</td></tr>
+            <tr><td>LUT as Distributed RAM</td><td>&mdash;</td><td>48</td><td>46,200</td><td>0.10%</td><td>&mdash;</td></tr>
+            <tr><td>DSP48E1</td><td>142</td><td>142</td><td>740</td><td>19.19%</td><td>0</td></tr>
+            <tr><td>Bonded IOBs</td><td>178</td><td>178</td><td>285</td><td>62.46%</td><td>0</td></tr>
+            <tr><td>BUFGCTRL</td><td>5</td><td>5</td><td>32</td><td>15.63%</td><td>0</td></tr>
+            <tr><td>MMCME2_ADV</td><td>1</td><td>1</td><td>10</td><td>10.00%</td><td>0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">MTI canceller added +694 LUTs (distributed RAM for chirp delay line + subtraction logic + DC notch comparators) and +2,104 FFs (I/Q pipeline registers, saturation logic, notch width comparators). Zero BRAM and DSP impact &mdash; MTI uses distributed RAM and fabric arithmetic only.</p>
+
+      <!-- 3. DSP48E1 Breakdown -->
+      <h3>3. DSP48E1 Breakdown by Module</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Module</th><th>DSP48E1</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>DDC (FIR I + FIR Q + CIC + NCO)</td><td>117</td><td>Dominant consumer: 47+47 FIR taps + 10+10 CIC + 2 DDC + 1 NCO</td></tr>
+            <tr><td>Matched Filter Processing Chain</td><td>12</td><td>8 FFT butterflies + 4 freq-domain multiply</td></tr>
+            <tr><td>Doppler Processor + FFT</td><td>10</td><td>8 FFT butterflies + 2 magnitude</td></tr>
+            <tr><td>CFAR Detector</td><td>3</td><td>alpha*noise multiply + GO/SO cross-multiply (pipelined)</td></tr>
+            <tr><td>MTI Canceller</td><td>0</td><td>Pure fabric arithmetic (subtraction + saturation)</td></tr>
+            <tr><td><strong>Total</strong></td><td><strong>142</strong></td><td>19.19% of 740 available</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 4. BRAM Breakdown -->
+      <h3>4. BRAM Breakdown by Module</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Module</th><th>RAMB36</th><th>RAMB18</th><th>Tiles</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Doppler Processor</td><td>4</td><td>0</td><td>4</td><td>Range-Doppler accumulation buffers</td></tr>
+            <tr><td>Matched Filter (mf_dual)</td><td>2</td><td>10</td><td>7</td><td>Coefficient + I/Q data BRAMs</td></tr>
+            <tr><td>CFAR Detector</td><td>1</td><td>0</td><td>1</td><td>Magnitude buffer (2048&times;17 bits)</td></tr>
+            <tr><td>Transmitter (chirp mem)</td><td>1</td><td>0</td><td>1</td><td>Chirp waveform storage</td></tr>
+            <tr><td>FFT Engines (2&times;)</td><td>4</td><td>0</td><td>4</td><td>Twiddle factor + butterfly BRAMs</td></tr>
+            <tr><td>MTI Canceller</td><td>0</td><td>0</td><td>0</td><td>Uses distributed RAM (LUTs), not BRAM</td></tr>
+            <tr><td><strong>Total</strong></td><td><strong>12</strong></td><td><strong>10</strong></td><td><strong>17</strong></td><td>4.66% of 365 tiles</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 5. Power -->
+      <h3>5. Power Estimate</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Category</th><th>Build 24</th><th>Build 25</th></tr></thead>
+          <tbody>
+            <tr><td>Dynamic Power</td><td>0.591 W</td><td>0.590 W</td></tr>
+            <tr><td>Device Static</td><td>0.163 W</td><td>0.163 W</td></tr>
+            <tr><td><strong>Total On-Chip</strong></td><td><strong>0.754 W</strong></td><td><strong>0.753 W</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">Power is essentially unchanged (-1 mW). MTI logic is lightweight fabric arithmetic; DC notch is combinational zeroing with negligible dynamic power.</p>
+
+      <!-- 6. Critical Path -->
+      <h3>6. Critical Path Analysis</h3>
+      <p>The tightest path (WNS = +0.132 ns) is in the <code>ft601_clk_in</code> (100 MHz) domain: <code>ft601_rxf</code> input pad &rarr; 8 logic levels (IBUF + LUT1 + LUT3 + 4&times;LUT6 + LUT5) &rarr; <code>usb_inst/FSM_sequential_current_state_reg[2]/D</code>. This is the USB read FSM path and is unrelated to MTI or CFAR.</p>
+      <p>The <code>clk_100m</code> domain (where MTI, CFAR, and Doppler operate) has +0.634 ns slack &mdash; improved from Build 24's +0.287 ns. The MTI canceller adds no new critical paths.</p>
+
+      <!-- 7. Post-synth vs Post-route -->
+      <h3>7. Post-Synthesis vs Post-Route Comparison</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Metric</th><th>Post-Synth</th><th>Post-Route (final)</th></tr></thead>
+          <tbody>
+            <tr><td>WNS (setup)</td><td>+0.123 ns</td><td>+0.132 ns</td></tr>
+            <tr><td>WHS (hold)</td><td>-0.076 ns (29 violations)</td><td>+0.058 ns (0 violations)</td></tr>
+            <tr><td>LUTs</td><td>9,363</td><td>9,252</td></tr>
+            <tr><td>FFs</td><td>12,537</td><td>12,488</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">Post-route phys_opt resolved all 29 hold violations and improved setup slack by 9 ps. LUT/FF count reduced slightly by optimization passes.</p>
+
+      <!-- 8. DRC -->
+      <h3>8. DRC (Design Rule Checks)</h3>
+      <p>184 checks performed. <strong>0 errors, 0 critical warnings.</strong> Same advisory/warning profile as Build 24 (DPIP-1, DPOP-1/2, REQP-1839/1840, RPBF-3 etc.). No new DRC issues from MTI integration.</p>
+
+      <!-- 9. Methodology -->
+      <h3>9. Methodology Report</h3>
+      <p>Same methodology advisory profile as Build 24. No new methodology warnings from MTI or DC notch logic.</p>
+
+      <!-- 10. Congestion -->
+      <h3>10. Congestion</h3>
+      <p><strong>No congestion windows found above level 5.</strong> The design remains well-placed at 6.87% LUT utilization.</p>
+
+      <!-- 11. Route Status -->
+      <h3>11. Route Status</h3>
+      <ul>
+        <li>Total logical nets: 34,325</li>
+        <li>Routable nets: 24,510 &mdash; <strong>24,510 fully routed (100%)</strong></li>
+        <li>Nets with routing errors: <strong>0</strong></li>
+      </ul>
+
+      <!-- 12. Hierarchical Utilization (MTI focus) -->
+      <h3>12. Hierarchical Utilization &mdash; MTI Module</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Instance</th><th>LUTs</th><th>FFs</th><th>BRAM</th><th>DSP</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>radar_system_top (total)</td><td>9,252</td><td>12,488</td><td>17</td><td>142</td><td>Full design</td></tr>
+            <tr><td>&nbsp;&nbsp;cfar_inst</td><td>2,210</td><td>1,282</td><td>1</td><td>3</td><td>CA-CFAR detector</td></tr>
+            <tr><td>&nbsp;&nbsp;rx_inst (receiver)</td><td>6,731</td><td>10,703</td><td>10</td><td>139</td><td>Full receiver chain</td></tr>
+            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;mti_inst</td><td>544</td><td>2,082</td><td>0</td><td>0</td><td>MTI canceller (new)</td></tr>
+            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;doppler_proc</td><td>681</td><td>540</td><td>4</td><td>10</td><td>Doppler processor</td></tr>
+            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;ddc</td><td>676</td><td>2,959</td><td>0</td><td>117</td><td>DDC subsystem</td></tr>
+            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;mf_dual</td><td>2,439</td><td>4,796</td><td>7</td><td>12</td><td>Matched filter</td></tr>
+            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;range_decim</td><td>219</td><td>129</td><td>0</td><td>0</td><td>Range bin decimator</td></tr>
+            <tr><td>&nbsp;&nbsp;usb_inst</td><td>159</td><td>217</td><td>0</td><td>0</td><td>USB data interface</td></tr>
+            <tr><td>&nbsp;&nbsp;tx_inst</td><td>111</td><td>91</td><td>1</td><td>0</td><td>Transmitter</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">MTI canceller: 544 LUTs (0.40% device), 2,082 FFs (0.77% device), 0 BRAM, 0 DSP. The high FF count is from the chirp delay line (64 range bins &times; 16-bit I + 16-bit Q = 2,048 FFs for storage) implemented as distributed register file rather than BRAM.</p>
+
+      <!-- 13. Build Comparison -->
+      <h3>13. Build-Over-Build Comparison</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Metric</th><th>Build 21 (baseline)</th><th>Build 23 (failed)</th><th>Build 24 (CFAR)</th><th>Build 25 (MTI)</th></tr></thead>
+          <tbody>
+            <tr><td>WNS (ns)</td><td>+0.156</td><td style="color:#c33;">-0.309</td><td>+0.179</td><td style="color:#080;"><strong>+0.132</strong></td></tr>
+            <tr><td>WHS (ns)</td><td>+0.064</td><td>&mdash;</td><td>+0.056</td><td>+0.058</td></tr>
+            <tr><td>LUTs</td><td>6,192</td><td>8,668 (synth)</td><td>8,558</td><td>9,252</td></tr>
+            <tr><td>FFs</td><td>9,064</td><td>10,411 (synth)</td><td>10,384</td><td>12,488</td></tr>
+            <tr><td>BRAM Tiles</td><td>16</td><td>17 (synth)</td><td>17</td><td>17</td></tr>
+            <tr><td>DSP48E1</td><td>139</td><td>&mdash;</td><td>142</td><td>142</td></tr>
+            <tr><td>Power (W)</td><td>0.732</td><td>&mdash;</td><td>0.754</td><td>0.753</td></tr>
+            <tr><td>Bitstream</td><td>Safe</td><td style="color:#c33;">Unsafe</td><td>Safe</td><td style="color:#080;"><strong>Safe</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 14. MTI + DC Notch Resource Cost -->
+      <h3>14. MTI + DC Notch Integration Resource Cost</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Resource</th><th>MTI + DC Notch</th><th>% of Device</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>LUTs</td><td>~694</td><td>0.52%</td><td>MTI: 544 LUTs (subtraction, saturation, mux). DC notch: ~150 LUTs (bin compare, data zeroing) in system_top.</td></tr>
+            <tr><td>FFs</td><td>~2,104</td><td>0.78%</td><td>MTI: 2,082 FFs (chirp delay line 64&times;32-bit + control). DC notch: ~22 FFs (registered width, active flags).</td></tr>
+            <tr><td>BRAM</td><td>0</td><td>0%</td><td>Chirp delay line fits in distributed registers (64 bins &times; 32 bits = 2,048 bits)</td></tr>
+            <tr><td>DSP48E1</td><td>0</td><td>0%</td><td>Subtraction uses fabric adders, no multiply needed</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">Total MTI + DC notch cost: 0.52% of device LUTs, 0.78% of FFs. Very lightweight addition. Backward-compatible: <code>host_mti_enable</code> defaults to 0 (pass-through), <code>host_dc_notch_width</code> defaults to 0 (off).</p>
+
+      <!-- 15. Verification Summary -->
+      <h3>15. Verification Summary</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Test Suite</th><th>Tests</th><th>Checks</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>FPGA regression (run_regression.sh)</td><td>23</td><td>&mdash;</td><td>23/23 PASS</td></tr>
+            <tr><td>MTI standalone (tb_mti_canceller.v)</td><td>11</td><td>29</td><td>29/29 PASS</td></tr>
+            <tr><td>CFAR standalone (tb_cfar_ca.v)</td><td>14</td><td>23</td><td>23/23 PASS</td></tr>
+            <tr><td>Digital gain (tb_rx_gain_control.v)</td><td>&mdash;</td><td>32</td><td>32/32 PASS</td></tr>
+            <tr><td>Threshold fallback (tb_threshold_detector.v)</td><td>&mdash;</td><td>22</td><td>22/22 PASS</td></tr>
+            <tr><td>System E2E (tb_system_e2e.v, Group 14)</td><td>13</td><td>67</td><td>67/67 PASS</td></tr>
+            <tr><td>Real-data co-sim: Range FFT</td><td>1</td><td>1,024</td><td>1024/1024 exact</td></tr>
+            <tr><td>Real-data co-sim: Doppler</td><td>1</td><td>2,056</td><td>2056/2056 exact</td></tr>
+            <tr><td>Real-data co-sim: Full-chain</td><td>1</td><td>2,057</td><td>2057/2057 exact</td></tr>
+            <tr><td>MCU regression</td><td>20</td><td>&mdash;</td><td>20/20 PASS</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">5,310 individual data checks across all RTL test suites. Zero failures. MTI standalone test covers: pass-through, first-chirp mute, subtraction correctness, stationary target cancellation, moving target preservation, saturation (positive/negative), enable toggle, reset behavior, bin tracking, back-to-back chirps, and negative value handling.</p>
+
+      <h3>Build 25 Artifacts</h3>
+      <ul>
+        <li>Bitstream: <code>~/PLFM_RADAR_work/vivado_project/bitstream/radar_system_top_build25.bit</code> (9.7 MB)</li>
+        <li>Reports: <code>~/PLFM_RADAR_work/vivado_project/reports_build25/</code> (21 report files)</li>
+        <li>Build log: <code>~/PLFM_RADAR_work/build25.log</code></li>
+        <li>TCL script: <code>~/PLFM_RADAR_work/vivado_project/build25_mti.tcl</code></li>
+      </ul>
+      <p class="muted">Note: TCL crashed at step 13/15 (<code>extract_files</code> missing parameter) after all reports were generated. Same non-critical scripting bug as Build 24.</p>
+    </section>
+
+    <!-- ===== Build 24 — 15-Point Report ===== -->
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>Build 24 &mdash; 15-Point Engineering Report</h2>
+      <p><span class="chip">Status: PASS &mdash; Production-safe bitstream generated</span></p>
+      <p class="muted">Date: 2026-03-20 &nbsp;|&nbsp; Commit: <code>0745cc4</code> &nbsp;|&nbsp; Device: XC7A200T-2FBG484I &nbsp;|&nbsp; Vivado 2025.2</p>
+
+      <!-- 1. Timing -->
+      <h3>1. Timing Summary</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Clock Domain</th><th>Period (ns)</th><th>WNS (ns)</th><th>WHS (ns)</th><th>WPWS (ns)</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>clk_100m</td><td>10.000</td><td>+0.287</td><td>+0.056</td><td>+3.870</td><td>PASS</td></tr>
+            <tr><td>clk_mmcm_out0 (400 MHz)</td><td>2.500</td><td>+0.179</td><td>+0.092</td><td>+0.684</td><td>PASS</td></tr>
+            <tr><td>adc_dco_p</td><td>&mdash;</td><td>+0.904</td><td>&mdash;</td><td>+0.361</td><td>PASS</td></tr>
+            <tr><td>ft601_clk_in</td><td>10.000</td><td>+0.347</td><td>+0.094</td><td>+4.500</td><td>PASS</td></tr>
+            <tr><td>clk_120m_dac</td><td>&mdash;</td><td>+1.755</td><td>+0.056</td><td>+3.666</td><td>PASS</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">TNS = 0.000 ns, THS = 0.000 ns across all domains. Zero failing endpoints.</p>
+
+      <!-- 2. Utilization -->
+      <h3>2. Utilization (Post-Route)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Resource</th><th>Build 21 (baseline)</th><th>Build 24</th><th>Available</th><th>Util%</th><th>Delta</th></tr></thead>
+          <tbody>
+            <tr><td>Slice LUTs</td><td>6,192</td><td>8,558</td><td>134,600</td><td>6.36%</td><td>+2,366 (+38%)</td></tr>
+            <tr><td>Slice Registers (FFs)</td><td>9,064</td><td>10,384</td><td>269,200</td><td>3.86%</td><td>+1,320 (+15%)</td></tr>
+            <tr><td>Block RAM Tiles</td><td>16</td><td>17</td><td>365</td><td>4.66%</td><td>+1</td></tr>
+            <tr><td>&nbsp;&nbsp;RAMB36E1</td><td>&mdash;</td><td>12</td><td>365</td><td>3.29%</td><td>&mdash;</td></tr>
+            <tr><td>&nbsp;&nbsp;RAMB18E1</td><td>&mdash;</td><td>10</td><td>730</td><td>1.37%</td><td>&mdash;</td></tr>
+            <tr><td>DSP48E1</td><td>139</td><td>142</td><td>740</td><td>19.19%</td><td>+3</td></tr>
+            <tr><td>Bonded IOBs</td><td>&mdash;</td><td>178</td><td>285</td><td>62.46%</td><td>&mdash;</td></tr>
+            <tr><td>BUFGCTRL</td><td>&mdash;</td><td>5</td><td>32</td><td>15.63%</td><td>&mdash;</td></tr>
+            <tr><td>MMCME2_ADV</td><td>&mdash;</td><td>1</td><td>10</td><td>10.00%</td><td>&mdash;</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">CFAR added +1 BRAM18 (magnitude buffer, 2048&times;17), +3 DSP48E1 (alpha multiply + cross-multiply for GO/SO), +2,366 LUTs (sliding window logic, state machine, mode mux), +1,320 FFs (pipeline registers, counters, window sums).</p>
+
+      <!-- 3. DSP48E1 Breakdown -->
+      <h3>3. DSP48E1 Breakdown by Module</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Module</th><th>DSP48E1</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>DDC (FIR I + FIR Q + CIC + NCO)</td><td>117</td><td>Dominant consumer: 47+47 FIR taps + 10+10 CIC + 2 DDC + 1 NCO</td></tr>
+            <tr><td>Matched Filter Processing Chain</td><td>12</td><td>8 FFT butterflies + 4 freq-domain multiply</td></tr>
+            <tr><td>Doppler Processor + FFT</td><td>10</td><td>8 FFT butterflies + 2 magnitude</td></tr>
+            <tr><td>CFAR Detector</td><td>3</td><td>alpha*noise multiply + GO/SO cross-multiply (pipelined)</td></tr>
+            <tr><td>System Top + Other</td><td>0</td><td>&mdash;</td></tr>
+            <tr><td><strong>Total</strong></td><td><strong>142</strong></td><td>19.19% of 740 available</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 4. BRAM Breakdown -->
+      <h3>4. BRAM Breakdown by Module</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Module</th><th>RAMB36</th><th>RAMB18</th><th>Tiles</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Doppler Processor</td><td>4</td><td>0</td><td>4</td><td>Range-Doppler accumulation buffers</td></tr>
+            <tr><td>Matched Filter (mf_dual)</td><td>2</td><td>10</td><td>7</td><td>Coefficient + I/Q data BRAMs</td></tr>
+            <tr><td>CFAR Detector</td><td>1</td><td>0</td><td>1</td><td>Magnitude buffer (2048&times;17 bits)</td></tr>
+            <tr><td>Transmitter (chirp mem)</td><td>1</td><td>0</td><td>1</td><td>Chirp waveform storage</td></tr>
+            <tr><td>FFT Engines (2&times;)</td><td>4</td><td>0</td><td>4</td><td>Twiddle factor + butterfly BRAMs</td></tr>
+            <tr><td><strong>Total</strong></td><td><strong>12</strong></td><td><strong>10</strong></td><td><strong>17</strong></td><td>4.66% of 365 tiles</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 5. Power -->
+      <h3>5. Power Estimate</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Category</th><th>Build 21</th><th>Build 24</th></tr></thead>
+          <tbody>
+            <tr><td>Dynamic Power</td><td>&mdash;</td><td>0.591 W</td></tr>
+            <tr><td>Device Static</td><td>&mdash;</td><td>0.163 W</td></tr>
+            <tr><td><strong>Total On-Chip</strong></td><td><strong>0.732 W</strong></td><td><strong>0.754 W</strong></td></tr>
+            <tr><td>Junction Temperature</td><td>&mdash;</td><td>26.9&deg;C</td></tr>
+            <tr><td>Max Ambient (TJA)</td><td>&mdash;</td><td>83.1&deg;C</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">+22 mW (+3%) from CFAR logic. Well within thermal budget.</p>
+
+      <!-- 6. Critical Path -->
+      <h3>6. Critical Path Analysis</h3>
+      <p>The tightest path (WNS = +0.179 ns) is in the <code>clk_mmcm_out0</code> (400 MHz) domain: NCO sine LUT index register &rarr; LUT6 &rarr; <code>sin_abs_reg</code>. This is the same path that was critical in Build 21 and is unrelated to CFAR.</p>
+      <p>The <code>clk_100m</code> domain (where CFAR operates) has +0.287 ns slack. The Build 23 critical path (<code>cfar_inst/leading_sum &rarr; cross-multiply &rarr; alpha*noise DSP</code>, WNS = -0.309 ns) has been completely eliminated by the pipeline fix.</p>
+
+      <!-- 7. Post-synth vs Post-route -->
+      <h3>7. Post-Synthesis vs Post-Route Comparison</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Metric</th><th>Post-Synth</th><th>Post-Route (final)</th></tr></thead>
+          <tbody>
+            <tr><td>WNS (setup)</td><td>+0.123 ns</td><td>+0.179 ns</td></tr>
+            <tr><td>WHS (hold)</td><td>-0.076 ns (29 violations)</td><td>+0.056 ns (0 violations)</td></tr>
+            <tr><td>LUTs</td><td>8,671</td><td>8,558</td></tr>
+            <tr><td>FFs</td><td>10,433</td><td>10,384</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">Post-route phys_opt resolved all 29 hold violations and improved setup slack by 56 ps. LUT/FF count reduced slightly by optimization passes.</p>
+
+      <!-- 8. DRC -->
+      <h3>8. DRC (Design Rule Checks)</h3>
+      <p>184 checks performed. <strong>0 errors, 0 critical warnings.</strong> Advisory/warning breakdown:</p>
+      <ul>
+        <li>DPIP-1 (input pipelining advisory): 68 &mdash; DSP input pipeline suggestions, acceptable for our architecture</li>
+        <li>DPOP-1/2 (output pipelining): 18 + 19 &mdash; DSP PREG/MREG advisory, non-critical</li>
+        <li>REQP-1839/1840 (BRAM async control): 20 + 20 &mdash; expected with async-reset BRAMs</li>
+        <li>RPBF-3 (IO buffering): 8 &mdash; intentional for differential pairs</li>
+        <li>CHECK-3 (report rule limit): 2 &mdash; tool display limit, not design issue</li>
+        <li>IOSR-1 (IOB set/reset sharing): 1 &mdash; non-critical</li>
+      </ul>
+
+      <!-- 9. Methodology -->
+      <h3>9. Methodology Report</h3>
+      <ul>
+        <li>DPIR-1 (async driver): 91 &mdash; known from async-reset architecture, mitigated by CDC modules</li>
+        <li>HPDR-1 (port direction inconsistency): 8 &mdash; bidir USB data bus, expected</li>
+        <li>LUTAR-1 (LUT drives async reset): 1 &mdash; watchdog reset path, intentional</li>
+        <li>PDRC-190 (suboptimal sync register placement): 3 &mdash; minor, does not affect timing</li>
+        <li>SYNTH-6 (RAM timing sub-optimal): 18 &mdash; inferred RAMs, all meeting timing</li>
+        <li>TIMING-9 (unknown CDC logic): 1 &mdash; covered by explicit CDC synchronizers</li>
+        <li>TIMING-28 (auto-derived clock in constraint): 8 &mdash; expected with MMCM-derived clocks</li>
+        <li>TIMING-47 (false path between sync clocks): 4 &mdash; intentional XDC false_path constraints</li>
+      </ul>
+
+      <!-- 10. Congestion -->
+      <h3>10. Congestion</h3>
+      <p><strong>No congestion windows found above level 5.</strong> The design is well-placed with no routing pressure. XC7A200T provides ample routing resources at 6.36% LUT utilization.</p>
+
+      <!-- 11. Route Status -->
+      <h3>11. Route Status</h3>
+      <ul>
+        <li>Total logical nets: 31,136</li>
+        <li>Routable nets: 22,026 &mdash; <strong>22,026 fully routed (100%)</strong></li>
+        <li>Nets with routing errors: <strong>0</strong></li>
+      </ul>
+
+      <!-- 12. Logic Level Distribution -->
+      <h3>12. Logic Level Distribution (Top 1000 Worst Paths)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Clock</th><th>Period</th><th>Lvl 0</th><th>Lvl 1</th><th>Lvl 2</th><th>Lvl 3</th><th>Lvl 4</th><th>Lvl 5</th></tr></thead>
+          <tbody>
+            <tr><td>clk_100m</td><td>10.000 ns</td><td>25</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>clk_mmcm_out0</td><td>2.500 ns</td><td>808</td><td>108</td><td>3</td><td>19</td><td>8</td><td>3</td></tr>
+            <tr><td>ft601_clk_in</td><td>10.000 ns</td><td>0</td><td>0</td><td>0</td><td>2</td><td>1</td><td>23</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">The <code>clk_100m</code> domain has only level-0 paths in the top-1000 worst &mdash; CFAR pipeline fix reduced logic depth to register-to-register transfers. The 400 MHz DDC domain remains the most timing-critical area.</p>
+
+      <!-- 13. Build Comparison -->
+      <h3>13. Build-Over-Build Comparison</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Metric</th><th>Build 21 (baseline)</th><th>Build 23 (CFAR, failed)</th><th>Build 24 (CFAR + pipeline)</th></tr></thead>
+          <tbody>
+            <tr><td>WNS (ns)</td><td>+0.156</td><td style="color:#c33;">-0.309</td><td style="color:#080;"><strong>+0.179</strong></td></tr>
+            <tr><td>WHS (ns)</td><td>+0.064</td><td>&mdash;</td><td>+0.056</td></tr>
+            <tr><td>LUTs</td><td>6,192</td><td>8,668 (post-synth)</td><td>8,558</td></tr>
+            <tr><td>FFs</td><td>9,064</td><td>10,411 (post-synth)</td><td>10,384</td></tr>
+            <tr><td>BRAM Tiles</td><td>16</td><td>17 (post-synth)</td><td>17</td></tr>
+            <tr><td>DSP48E1</td><td>139</td><td>&mdash;</td><td>142</td></tr>
+            <tr><td>Power (W)</td><td>0.732</td><td>&mdash;</td><td>0.754</td></tr>
+            <tr><td>Bitstream</td><td>Safe</td><td style="color:#c33;">Unsafe (timing fail)</td><td style="color:#080;"><strong>Safe</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 14. CFAR Resource Cost -->
+      <h3>14. CFAR Integration Resource Cost</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Resource</th><th>CFAR Module Only</th><th>% of Device</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>LUTs</td><td>2,229</td><td>1.66%</td><td>Sliding window sums, GO/SO cross-multiply, state machine, mode mux</td></tr>
+            <tr><td>FFs</td><td>1,281</td><td>0.48%</td><td>Pipeline registers, window counters, sum accumulators, noise_sum_reg</td></tr>
+            <tr><td>RAMB36E1</td><td>1</td><td>0.27%</td><td>Magnitude buffer: 2048 entries &times; 17 bits</td></tr>
+            <tr><td>DSP48E1</td><td>3</td><td>0.41%</td><td>alpha&times;noise, leading cross-multiply, lagging cross-multiply</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">Total CFAR cost: 2.82% of device LUTs, 0.48% of FFs, 0.27% of BRAM, 0.41% of DSPs. Minimal impact on headroom.</p>
+
+      <!-- 15. Verification Summary -->
+      <h3>15. Verification Summary</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Test Suite</th><th>Tests</th><th>Checks</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>FPGA regression (run_regression.sh)</td><td>22</td><td>&mdash;</td><td>22/22 PASS</td></tr>
+            <tr><td>CFAR standalone (tb_cfar_ca.v)</td><td>14</td><td>23</td><td>23/23 PASS</td></tr>
+            <tr><td>Digital gain (tb_rx_gain_control.v)</td><td>&mdash;</td><td>32</td><td>32/32 PASS</td></tr>
+            <tr><td>Threshold fallback (tb_threshold_detector.v)</td><td>&mdash;</td><td>22</td><td>22/22 PASS</td></tr>
+            <tr><td>System E2E (tb_system_e2e.v, Group 14)</td><td>13</td><td>67</td><td>67/67 PASS</td></tr>
+            <tr><td>Real-data co-sim: Range FFT</td><td>1</td><td>1,024</td><td>1024/1024 exact</td></tr>
+            <tr><td>Real-data co-sim: Doppler</td><td>1</td><td>2,056</td><td>2056/2056 exact</td></tr>
+            <tr><td>Real-data co-sim: Full-chain</td><td>1</td><td>2,057</td><td>2057/2057 exact</td></tr>
+            <tr><td>MCU regression</td><td>20</td><td>&mdash;</td><td>20/20 PASS</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">5,281 individual data checks across all RTL test suites. Zero failures. Real-data co-simulation confirms bit-exact match with Python golden reference across the entire signal processing chain.</p>
+
+      <h3>Build 24 Artifacts</h3>
+      <ul>
+        <li>Bitstream: <code>~/PLFM_RADAR_work/vivado_project/bitstream/radar_system_top_build24.bit</code> (9.7 MB)</li>
+        <li>Reports: <code>~/PLFM_RADAR_work/vivado_project/reports_build24/</code> (21 report files)</li>
+        <li>Build log: <code>~/PLFM_RADAR_work/build24.log</code></li>
+        <li>TCL script: <code>~/PLFM_RADAR_work/vivado_project/build24_cfar.tcl</code></li>
+      </ul>
+      <p class="muted">Note: TCL crashed at step 13/15 (<code>extract_files</code> missing parameter) after all reports were generated. Non-critical scripting bug; all implementation, optimization, and bitstream generation completed successfully.</p>
+    </section>
+
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>Board-day artifact inventory</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Artifact</th>
+              <th>Source path</th>
+              <th>Day-0 use</th>
+              <th>Status / note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Production-target XDC</td><td><code>9_Firmware/9_2_FPGA/constraints/xc7a200t_fbg484.xdc</code></td><td>Constraint source of truth for the production FPGA target</td><td>Tracked and validated after Build 16 cleanup port</td></tr>
+            <tr><td>FPGA programming flow</td><td><code>9_Firmware/9_2_FPGA/scripts/program_fpga.tcl</code></td><td>Programs the device and reports DONE / INIT_COMPLETE / probes presence</td><td>Primary operator-facing programming script</td></tr>
+            <tr><td>Debug probe insertion flow</td><td><code>9_Firmware/9_2_FPGA/scripts/insert_ila_probes.tcl</code></td><td>Used when generating or refreshing debug-capable images</td><td>Keep matched with the selected debug bitstream</td></tr>
+            <tr><td>FPGA regression runner</td><td><code>9_Firmware/9_2_FPGA/run_regression.sh</code></td><td>Pre-arrival regression evidence for the tracked FPGA baseline</td><td>23 / 23 passing on the current tracked branch (includes CFAR + MTI + E2E tests)</td></tr>
+            <tr><td>MCU regression harness</td><td><code>9_Firmware/9_1_Microcontroller/tests/Makefile</code></td><td>Pre-arrival firmware regression evidence before flashing hardware</td><td>20 / 20 passing on the current tracked branch</td></tr>
+            <tr><td>Bring-up logging macros</td><td><code>9_Firmware/9_1_Microcontroller/9_1_1_C_Cpp_Libraries/diag_log.h</code></td><td>Defines the main first-power-on log vocabulary used over USART3</td><td>Observation-only instrumentation layer</td></tr>
+            <tr><td>Board-day worksheet</td><td><code>docs/board-day-worksheet.html</code></td><td>Record pass/fail, measurements, and blockers during first sessions</td><td>Use with this page and the bring-up plan</td></tr>
+            <tr><td>Bring-up execution plan</td><td><code>docs/bring-up.html</code></td><td>Operator checklist, abort criteria, observability targets, and open risks</td><td>Primary readiness document</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="grid-2" style="margin-top:0.8rem;">
+      <article class="card">
+        <h2>Antenna Simulation Report</h2>
+        <p><span class="chip">Status: Mostly current (historical Phase-0 context)</span></p>
+        <p class="muted">File: <code>AERIS_Antenna_Report.pdf</code></p>
+        <p class="muted">Notes: Valid for 10.5 GHz patch-element simulation and array projection context. Treat as element-level evidence, not full current hardware bring-up sign-off.</p>
+        <p>
+          <a class="button" href="AERIS_Antenna_Report.pdf" target="_blank" rel="noopener">Open PDF</a>
+          <a class="button ghost" href="AERIS_Antenna_Report.pdf" download>Download</a>
+        </p>
+      </article>
+      <article class="card">
+        <h2>Python Simulation Report</h2>
+        <p><span class="chip">Status: Legacy (needs refresh)</span></p>
+        <p class="muted">File: <code>AERIS_Simulation_Report.pdf</code></p>
+        <p class="muted">Notes: Contains older architecture assumptions (e.g., XC7A100T-centric narrative). Use as historical reference only until Simulation Report v2 is published.</p>
+        <p>
+          <a class="button" href="AERIS_Simulation_Report.pdf" target="_blank" rel="noopener">Open PDF</a>
+          <a class="button ghost" href="AERIS_Simulation_Report.pdf" download>Download</a>
+        </p>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>FPGA implementation analysis</h2>
+      <p><span class="chip">Status: Current engineering baseline &mdash; Build 25 (MTI + DC notch)</span></p>
+      <p class="muted">Build 25 is the current production baseline. Includes MTI canceller (2-pulse clutter cancellation) and DC notch filter on top of CA-CFAR detector. Full 15-point report above. WNS +0.132 ns, WHS +0.058 ns. DSP count 142 (unchanged). BRAM 17 (unchanged). LUTs 9,252 (+694 from Build 24). FFs 12,488 (+2,104). Power 0.753 W (unchanged).</p>
+      <p class="muted">Build 24 (v0.1.5-cfar) integrated CA-CFAR with pipelined noise computation. Build 23 failed timing (WNS -0.309 ns) due to combinational critical path &mdash; fixed by pipelining.</p>
+      <p class="muted">Build 21 (v0.1.4-build21) retained as pre-CFAR reference. Build 20 (v0.1.3-build20) and earlier retained for historical reference.</p>
+    </section>
+
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>Latest Simulation Report (Recommended)</h2>
+      <p><span class="chip">Status: Current baseline (v2)</span></p>
+      <p class="muted">File: <code>AERIS_Simulation_Report_v2.pdf</code></p>
+      <p class="muted">Aligned to the active project baseline: XC7A200T target, firmware regression closure, FPGA regression/timing gates, USB range-profile integration, and TE0712/TE0713 split-target flow.</p>
+      <p>
+        <a class="button" href="AERIS_Simulation_Report_v2.pdf" target="_blank" rel="noopener">Open PDF</a>
+        <a class="button ghost" href="AERIS_Simulation_Report_v2.pdf" download>Download</a>
+      </p>
+    </section>
+
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>Report Currency Notice</h2>
+      <ul>
+        <li>The current routed production-target baseline is <strong>Build 25</strong> with all timing constraints met. WNS +0.132 ns, WHS +0.058 ns, 142 DSP48E1, 17 BRAM, 0.753 W.</li>
+        <li>All architectural gaps are closed: Gap 1 (CFAR) integrated as CA-CFAR detector with CA/GO/SO modes (Build 24). MTI canceller + DC notch filter added in Build 25. Gaps 2&ndash;7 were closed prior to Build 21.</li>
+        <li>FPGA regression: 23/23 pass (includes CFAR + MTI + E2E tests). MCU regression: 20/20 pass. Real-data co-sim: 3/3 exact match (5,137 data checks).</li>
+        <li>MTI integration cost: +694 LUTs, +2,104 FFs, 0 BRAM, 0 DSPs. Backward-compatible: <code>host_mti_enable</code> and <code>host_dc_notch_width</code> default to disabled/off.</li>
+        <li>Detailed Build 25 engineering reports are on the remote Vivado host at <code>~/PLFM_RADAR_work/vivado_project/reports_build25/</code>.</li>
+        <li>The artifact inventory above is intended to stabilize day-0 execution even when detailed internal engineering reports stay outside the public docs site.</li>
+      </ul>
+    </section>
+
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>Antenna concept snapshot</h2>
+      <img class="diagram" src="assets/img/Antenna_Array.jpg" alt="Antenna array concept">
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container"><p>Add future report artifacts here to keep public references stable.</p></div>
+  </footer>
+</body>
+</html>

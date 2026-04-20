@@ -1,0 +1,51 @@
+[project]
+name = "aeris-10-radar"
+version = "1.0.0"
+description = "AERIS-10 FMCW Radar Platform — host software & FPGA cosim tools"
+requires-python = ">=3.12"
+
+# Runtime dependencies intentionally empty — GUI deps are optional and
+# listed in requirements_*.txt files for local installs.
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "ruff>=0.5",
+    "pytest>=8",
+    "numpy>=1.26",
+    "h5py>=3.10",
+]
+
+# ---------------------------------------------------------------------------
+# Ruff configuration
+# ---------------------------------------------------------------------------
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes (unused imports, undefined names, duplicate keys, assert-tuple)
+    "B",    # flake8-bugbear (mutable defaults, unreachable code, raise-without-from)
+    "RUF",  # ruff-specific (unused noqa, ambiguous chars, implicit Optional)
+    "SIM",  # flake8-simplify (dead branches, collapsible ifs, unnecessary pass)
+    "PIE",  # flake8-pie (no-op expressions, unnecessary spread)
+    "T20",  # flake8-print (stray print() calls — LLMs leave debug prints)
+    "ARG",  # flake8-unused-arguments (LLMs generate params they never use)
+    "ERA",  # eradicate (commented-out code — LLMs leave "alternatives" as comments)
+    "A",    # flake8-builtins (LLMs shadow id, type, list, dict, input, map)
+    "BLE",  # flake8-blind-except (bare except / overly broad except)
+    "RET",  # flake8-return (unreachable code after return, unnecessary else-after-return)
+    "ISC",  # flake8-implicit-str-concat (missing comma in list of strings)
+    "TCH",  # flake8-type-checking (imports only used in type hints — move behind TYPE_CHECKING)
+    "UP",   # pyupgrade (outdated syntax for target Python version)
+    "C4",   # flake8-comprehensions (unnecessary list/dict calls around generators)
+    "PERF", # perflint (performance anti-patterns: unnecessary list() in for loops, etc.)
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests: allow unused args (fixtures), prints (debugging), commented code (examples)
+"test_*.py" = ["ARG", "T20", "ERA"]
+# Re-export modules: unused imports are intentional
+"v7/hardware.py" = ["F401"]

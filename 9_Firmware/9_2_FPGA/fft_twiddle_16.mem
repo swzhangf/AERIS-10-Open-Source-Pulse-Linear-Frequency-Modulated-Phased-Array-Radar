@@ -1,0 +1,8 @@
+// Quarter-wave cosine ROM for 16-point FFT
+// 4 entries (N/4), 16-bit signed Q15 format
+// cos(2*pi*k/16) for k = 0..3
+// Used by fft_engine with N=16, LOG2N=4
+7FFF
+7641
+5A82
+30FB

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AERIS-10 Docs | Architecture</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="index.html">AERIS-10 Docs</a>
+      <nav>
+        <a href="architecture.html">Architecture</a>
+        <a href="implementation-log.html">Implementation Log</a>
+        <a href="bring-up.html">Bring-Up</a>
+        <a href="reports.html">Reports</a>
+        <a href="release-notes.html">Release Notes</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    <section class="hero">
+      <p class="eyebrow">System View</p>
+      <h1>Architecture and Data Path</h1>
+      <p>Hardware and firmware structure for the current XC7A200T implementation and bring-up targets.</p>
+    </section>
+
+    <section class="grid-2">
+      <article class="card">
+        <h2>Top-level processing flow</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Stage</th>
+                <th>Module Focus</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ADC capture</td>
+                <td>AD9484 interface + CDC edge</td>
+                <td>400 MHz sampling domain, synchronized into processing pipeline.</td>
+              </tr>
+              <tr>
+                <td>DDC</td>
+                <td>NCO + CIC + FIR</td>
+                <td>I/Q conversion and decimation for baseband-ready stream.</td>
+              </tr>
+              <tr>
+                <td>Matched filter</td>
+                <td>FFT-based chain</td>
+                <td>Synthesis branch is golden for hardware-equivalent co-sim.</td>
+              </tr>
+              <tr>
+                <td>Range/Doppler</td>
+                <td>Range bin decimator + Doppler FFT</td>
+                <td>32 chirps/frame, 64 range bins, deterministic frame outputs.</td>
+              </tr>
+              <tr>
+                <td>Host path</td>
+                <td>FT601 interface</td>
+                <td>USB streaming with framing and soak validation in bring-up.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Current target split strategy</h2>
+        <ul>
+          <li>Production target remains <code>xc7a200t-2fbg484i</code> with full board constraints.</li>
+          <li>TE0712/TE0701 and TE0713/TE0701 use dedicated top wrappers and dedicated XDC files.</li>
+          <li>Board-specific pinouts are isolated from core DSP modules to avoid accidental cross-target regression.</li>
+          <li>Bring-up sequence starts from minimal heartbeat top, then steps into full signal chain validation.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>Reference block diagram</h2>
+      <img class="diagram" src="assets/img/RADAR_V6.jpg" alt="AERIS-10 system architecture diagram">
+      <p class="muted">Diagram snapshot from AERIS-10 project architecture.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container"><p>Architecture is updated as bring-up and integration milestones complete.</p></div>
+  </footer>
+</body>
+</html>

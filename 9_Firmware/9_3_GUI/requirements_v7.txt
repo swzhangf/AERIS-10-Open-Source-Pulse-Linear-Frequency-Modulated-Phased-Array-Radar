@@ -1,0 +1,22 @@
+# PLFM Radar GUI V7 — Python dependencies
+# Install with:  pip install -r requirements_v7.txt
+
+# Core (required)
+PyQt6>=6.5
+PyQt6-WebEngine>=6.5
+numpy>=1.24
+matplotlib>=3.7
+
+# Hardware interfaces (optional — GUI degrades gracefully)
+pyusb>=1.2
+pyftdi>=0.54
+
+# Signal processing (optional)
+scipy>=1.10
+
+# Tracking / clustering (optional)
+scikit-learn>=1.2
+filterpy>=1.4
+
+# CRC validation (optional)
+crcmod>=1.7

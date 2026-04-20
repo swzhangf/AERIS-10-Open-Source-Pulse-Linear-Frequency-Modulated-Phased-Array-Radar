@@ -1,0 +1,6 @@
+-- QUCS to Gerber File Conversion Log --
+
+qucs -n -i Sim_BPF_Te_100um.sch -o netlist.txt
+1
+Error: Could not read netlist file: netlist.txt
+Converting to gerber file...

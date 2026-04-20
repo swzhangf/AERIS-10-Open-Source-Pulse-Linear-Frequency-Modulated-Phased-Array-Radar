@@ -1,0 +1,35 @@
+<QucsStudio Schematic 5.8>
+<Properties>
+View=-1010.56,-119.947,2010.18,1100.65,0.810984,0,0
+Grid=10,10,0
+DataSet=*.dat
+DataDisplay=*.sch
+OpenDisplay=1
+showFrame=0
+FrameText0=Title \n @PATH@@FILE@
+FrameText1=Drawn By:
+FrameText2=Date: @DATE@
+FrameText3=Revision:
+</Properties>
+<Symbol>
+</Symbol>
+<Components>
+</Components>
+<Wires>
+</Wires>
+<Diagrams>
+<Rect -812 285 2775 272 31 #c0c0c0 1 00 1 -1 0.05 1 1 -1 0.5 1 1 -1 0.5 1 -1 -1 -1 "" "" "">
+	<Legend 10 -100 0>
+	<"Vin_P.Vt" "" #0000ff 1 3 0 0 0 1 "">
+	<"Vin_N.Vt" "" #ff0000 1 3 0 0 0 1 "">
+	<"Vout_P.Vt" "" #ff00ff 1 3 0 0 0 1 "">
+	<"Vout_N.Vt" "" #00dc00 1 3 0 0 0 1 "">
+</Rect>
+<Rect -140 611 1017 262 31 #c0c0c0 1 00 0 0 5e+06 5e+07 0 -0.05 0.05 0.2 1 -1 0.5 1 -1 -1 -1 "" "" "">
+	<Legend 10 -100 0>
+	<"time2freq(Vin_P.Vt)" "" #ff0000 1 3 0 0 0 1 "">
+	<"time2freq(Vout_P.Vt)" "" #0000ff 1 3 0 0 0 1 "">
+</Rect>
+</Diagrams>
+<Paintings>
+</Paintings>

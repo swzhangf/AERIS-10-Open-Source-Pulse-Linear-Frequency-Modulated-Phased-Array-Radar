@@ -1,0 +1,30 @@
+AERIS-10 Test Vector Scenarios
+============================================================
+
+System Parameters:
+  Carrier: 10.5 GHz
+  IF: 120 MHz
+  Chirp BW: 20 MHz
+  ADC: 400 MSPS, 8-bit
+  Range resolution: 7.5 m
+  Wavelength: 28.57 mm
+
+Scenario 1: Single target
+  Target(range=500.0m, vel=0.0m/s, RCS=0.0dBsm, delay=1333.3samp)
+
+Scenario 2: Multi-target (5 targets)
+  Target(range=100.0m, vel=0.0m/s, RCS=20.0dBsm, delay=266.7samp)
+  Target(range=500.0m, vel=30.0m/s, RCS=10.0dBsm, delay=1333.3samp)
+  Target(range=1000.0m, vel=-15.0m/s, RCS=5.0dBsm, delay=2666.7samp)
+  Target(range=2000.0m, vel=50.0m/s, RCS=0.0dBsm, delay=5333.3samp)
+  Target(range=5000.0m, vel=-5.0m/s, RCS=-5.0dBsm, delay=13333.3samp)
+
+Scenario 3: Noise only (stddev=5.0 LSB)
+
+Scenario 4: DC input (value=128)
+
+Scenario 5: 1 MHz sine wave (amplitude=50 LSB)
+
+Baseband MF test targets:
+  Target(range=500.0m, vel=0.0m/s, RCS=10.0dBsm, delay=1333.3samp)
+  Target(range=1500.0m, vel=20.0m/s, RCS=5.0dBsm, delay=4000.0samp)

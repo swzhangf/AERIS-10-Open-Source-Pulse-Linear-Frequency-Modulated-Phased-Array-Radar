@@ -1,0 +1,27 @@
+[tasks]
+bmc
+cover
+
+[options]
+bmc: mode bmc
+bmc: depth 512
+cover: mode cover
+cover: depth 1024
+
+[engines]
+smtbmc z3
+
+[script]
+read_verilog -formal doppler_processor.v
+read_verilog -formal xfft_16.v
+read_verilog -formal fft_engine.v
+read_verilog -formal fv_doppler_processor.v
+prep -top fv_doppler_processor
+
+[files]
+../doppler_processor.v
+../xfft_16.v
+../fft_engine.v
+../fft_twiddle_16.mem
+../fft_twiddle_1024.mem
+fv_doppler_processor.v

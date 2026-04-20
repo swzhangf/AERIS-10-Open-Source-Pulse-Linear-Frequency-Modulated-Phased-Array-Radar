@@ -1,0 +1,20 @@
+# Requirements for PLFM Radar Dashboard - PyQt6 Edition
+# ======================================================
+# Install with: pip install -r requirements_pyqt_gui.txt
+
+# Core PyQt6 framework
+PyQt6>=6.5.0
+
+# Web engine for embedded Leaflet maps
+PyQt6-WebEngine>=6.5.0
+
+# Optional: Additional dependencies from existing radar code
+# (uncomment if integrating with existing radar processing)
+# numpy>=1.24
+# scipy>=1.10
+# scikit-learn>=1.2
+# filterpy>=1.4
+# matplotlib>=3.7
+
+# Note: The GUI uses Leaflet.js (loaded from CDN) for maps
+# No additional Python map libraries required

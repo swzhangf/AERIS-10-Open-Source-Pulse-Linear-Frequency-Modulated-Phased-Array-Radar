@@ -1,0 +1,9 @@
+# AERIS-10 Radar Dashboard dependencies
+# Install: pip install -r requirements_dashboard.txt
+
+numpy>=1.24
+matplotlib>=3.7
+h5py>=3.8
+
+# FT2232H USB 2.0 driver (pyftdi — pure Python, pip-installable)
+# pyftdi>=0.54  # Optional: only needed for --live mode with real hardware

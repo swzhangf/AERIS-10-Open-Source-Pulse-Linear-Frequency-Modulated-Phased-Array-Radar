@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AERIS-10 Docs | Implementation Log</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="index.html">AERIS-10 Docs</a>
+      <nav>
+        <a href="architecture.html">Architecture</a>
+        <a href="implementation-log.html">Implementation Log</a>
+        <a href="bring-up.html">Bring-Up</a>
+        <a href="reports.html">Reports</a>
+        <a href="release-notes.html">Release Notes</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    <section class="hero">
+      <p class="eyebrow">Engineering Journal</p>
+      <h1>Implementation Timeline and Improvements</h1>
+      <p>Consolidated record of key firmware, timing, debug and infrastructure changes.</p>
+    </section>
+
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>Recent milestone timeline</h2>
+      <div class="timeline">
+        <article>
+          <h3>Build 25 &mdash; MTI canceller + DC notch filter (ed629e7)</h3>
+          <p class="muted">MTI 2-pulse canceller (H(z) = 1 - z^{-1}) integrated between range bin decimator and Doppler processor for ground clutter removal. DC notch filter (post-Doppler, pre-CFAR) zeroes bins within &plusmn;host_dc_notch_width of bin 0. Two new host registers: host_mti_enable (0x26), host_dc_notch_width (0x27). Both default to off/pass-through for backward compatibility. Build 25: WNS +0.132 ns, WHS +0.058 ns. 9,252 LUTs, 12,488 FFs, 17 BRAM, 142 DSP, 0.753 W. 23/23 FPGA regression, 29/29 MTI standalone checks, 3/3 real-data co-sim exact match.</p>
+        </article>
+        <article>
+          <h3>Build 24 tagged v0.1.5-cfar &mdash; CA-CFAR production baseline (075ae1e)</h3>
+          <p class="muted">CA-CFAR detector with CA/GO/SO modes integrated, replacing old threshold detector. Pipelined noise computation (Build 23 fix). WNS +0.179 ns, WHS +0.056 ns. 8,558 LUTs, 10,384 FFs, 17 BRAM, 142 DSP, 0.754 W. CFAR cost: +2,229 LUTs, +1,281 FFs, +1 BRAM, +3 DSP. Includes magnitude BRAM buffer, sliding-window algorithm, host-configurable guard/train/alpha/mode registers (opcodes 0x21-0x25).</p>
+        </article>
+        <article>
+          <h3>Build 23 failed timing, root-caused and fixed (0745cc4)</h3>
+          <p class="muted">Build 23 had WNS -0.309 ns due to combinational path through CFAR noise_sum_comb &rarr; cross-multiply &rarr; alpha*noise DSP. Fixed by pipelining noise computation into ST_CFAR_THR + ST_CFAR_MUL stages, splitting the path across two clock cycles.</p>
+        </article>
+        <article>
+          <h3>7 production fixes tagged v0.1.4-prod-fixes (e93bc33)</h3>
+          <p class="muted">Detection bug fixes (sticky flag + one-cycle-lag magnitude), rename cfar&rarr;threshold_detect, digital gain control (host-configurable power-of-2 shift), Doppler/chirps mismatch protection (clamp + error flag), decimator watchdog (timeout counter), bypass_mode dead code removal, range-mode register (0x20). Real-data co-simulation framework added. 22/22 FPGA regression.</p>
+        </article>
+        <article>
+          <h3>Real-data co-simulation framework (0b06436)</h3>
+          <p class="muted">Three real-data testbenches added: range FFT, Doppler, and full-chain. Compare RTL outputs against Python golden reference using recorded ADC captures. 5,137 total data checks, all exact bit-for-bit match. Tagged v0.1.4-pre-fixes as safety net before production fixes.</p>
+        </article>
+        <article>
+          <h3>Build 21 tagged v0.1.4-build21 &mdash; pre-CFAR production baseline (2efab23)</h3>
+          <p class="muted">WNS +0.156 ns, WHS +0.064 ns, WPWS +0.361 ns. 6,192 LUTs (4.6%), 9,064 FFs (3.4%), 16 BRAM (4.4%), 139 DSP48E1 (18.8%), 0.732 W. Includes FFT 4-cycle butterfly (20% throughput), barrel-shift twiddle (-1 DSP), Gap 2 GUI Settings, E2E RTL fixes (mixer sequencing, USB data-pending, receiver toggle wiring), Vivado DRC multiple-driver fix for data_pending flags, and MMCM LOCKED XDC false_path correction (-from &rarr; -through). Build script crash at report_exceptions/check_timing (Vivado 2025.2 bug) fixed by wrapping in catch blocks; all 12 critical reports and bitstream generated successfully.</p>
+        </article>
+        <article>
+          <h3>E2E integration test + RTL fixes: mixer sequencing, USB data-pending, receiver wiring (0773001)</h3>
+          <p class="muted">New end-to-end testbench (tb_system_e2e.v) with 46 checks across 12 groups covering reset, TX, safety, RX, USB R/W, CDC, beam scanning, reset recovery, stream control, latency budgets, and watchdog. RTL fixes discovered via E2E: chirp controller TX/RX mixer enables now mutually exclusive by FSM state; USB write FSM gains doppler/cfar data_pending sticky flags with stream-control reset default changed to range-only (3'b001); receiver gets STM32 toggle signal inputs and dynamic frame detection. USB unit tests 21/22/56 updated for data_pending architecture. Regression script PASS/FAIL parsing hardened. 19/19 FPGA, 20/20 MCU.</p>
+        </article>
+        <article>
+          <h3>FFT engine optimizations: 4-cycle butterfly + barrel-shift twiddle (a3e1996)</h3>
+          <p class="muted">Merged SHIFT state into WRITE stage for a 5&rarr;4 cycle butterfly pipeline (20% throughput improvement). Replaced multiplier-based twiddle factor index computation with variable left-shift (barrel shift), freeing one DSP48 multiplier. Both changes verified via FFT testbench.</p>
+        </article>
+        <article>
+          <h3>Gap 2: GUI Settings &mdash; runtime chirp timing, stream control, status readback (7cdfa48)</h3>
+          <p class="muted">Radar chirp timing parameters (long/short chirp, listen, guard cycles, chirps-per-elevation) are now runtime-configurable via 6 new USB opcodes (0x10-0x15). Stream control (opcode 0x04) gates the USB write FSM per-stream. CFAR threshold (opcode 0x03) is wired to actual comparison logic (was hardcoded). Status readback (opcode 0xFF) returns a 7-word packet with all current settings. CDC handled via per-bit 2-stage synchronizers (stream control) and toggle CDC (status request). 4 new testbench groups added. 18/18 FPGA, 20/20 MCU.</p>
+        </article>
+        <article>
+          <h3>Gap 4: USB Read Path wired with toggle CDC (e5d1b3c)</h3>
+          <p class="muted">FT601 read FSM cmd_* outputs connected through toggle CDC to clk_100m command decode registers in radar_system_top.v. Host can now set radar mode, trigger chirps, set CFAR threshold, and control data streaming via USB. 3 new testbench groups (55 total checks). 18/18 FPGA regression.</p>
+        </article>
+        <article>
+          <h3>Build 20 tagged v0.1.3-build20 &mdash; new production baseline (c6103b3)</h3>
+          <p class="muted">WNS improved 7x to +0.426 ns (from +0.062 ns in Build 18). Includes 400 MHz MMCM jitter cleaner, CIC comb DSP48E1 CREG pipeline, and XDC clock-name fix. All timing constraints met. 6,092 LUTs (4.5%), 9,024 FFs (3.4%), 16 BRAM (4.4%), 140 DSP48E1 (18.9%), 0.730 W.</p>
+        </article>
+        <article>
+          <h3>Build 19 timing failure root-caused and fixed</h3>
+          <p class="muted">Build 19 had WNS -0.011 ns due to conflicting XDC create_generated_clock preventing false-path application on CDC paths. Fixed by removing the conflicting constraint and using Vivado auto-generated clk_mmcm_out0.</p>
+        </article>
+        <article>
+          <h3>Gap 3: Safety Architecture closed (f3bbf77)</h3>
+          <p class="muted">Added IWDG watchdog configuration, Emergency_Stop PA rail cutoff, temperature max guard, periodic IDQ re-read, and emergency state ordering. 5 new MCU tests, 20/20 MCU regression pass.</p>
+        </article>
+        <article>
+          <h3>Gap 5: BRAM async reset fixed (c87dce0)</h3>
+          <p class="muted">Chirp memory loader BRAM async reset converted to synchronous reset pattern per Xilinx UG901 guidelines. Prevents BRAM inference failures on production target.</p>
+        </article>
+        <article>
+          <h3>Build 18 tagged v0.1.2-build18 &mdash; prior production baseline</h3>
+          <p class="muted">WNS +0.062 ns, WHS +0.059 ns. 6,088 LUTs, 8,946 FFs, 16 BRAM, 140 DSP48E1, 0.631 W. All timing met.</p>
+        </article>
+        <article>
+          <h3>Firmware bug sweep closed with regression coverage</h3>
+          <p class="muted">All 17 audited MCU firmware bugs were fixed, regression-tested, and pushed, including LO init ordering, SPI chip-select handling, PA calibration logic, TIM3 PWM bring-up, and stale diagnostic mismatches. 20/20 MCU tests pass.</p>
+        </article>
+        <article>
+          <h3>FPGA timing/resource cleanup phase completed</h3>
+          <p class="muted">Chirp BRAM migration, Doppler DSP48 pipelining, CIC pipeline staging, matched-filter regression repair, and full FPGA regression brought the active baseline to 18/18 passing tests.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="grid-2" style="margin-top:0.8rem;">
+      <article class="card">
+        <h2>Codebase quality and verification upgrades</h2>
+        <ul>
+          <li>FPGA regression: 23/23 passing suites covering matched filter, Doppler, CIC, CDC, USB (with read path), FFT, NCO, FIR, range decimator, mode controller, system-top integration, system E2E, CFAR standalone, and MTI standalone.</li>
+          <li>MCU regression: 20/20 passing tests (15 bug-fix + 5 Gap-3 safety tests).</li>
+          <li>Architectural gaps 1&ndash;7 all closed. Gap 1 (CFAR) integrated as CA-CFAR detector (Build 24). MTI canceller + DC notch filter added (Build 25). Gaps 2&ndash;7 closed prior to Build 21.</li>
+          <li>USB host-to-FPGA command path fully wired: read FSM, toggle CDC, command decode for mode/trigger/CFAR/stream control. GUI settings (chirp timing, stream gating, status readback) fully operational.</li>
+          <li>Safety architecture: IWDG watchdog, emergency stop PA cutoff, temperature guard, IDQ re-read, state ordering.</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h2>Build history and timing improvements</h2>
+        <ul>
+          <li><strong>Build 25 (v0.1.6-mti)</strong>: Current production baseline. WNS +0.132 ns, WHS +0.058 ns. MTI canceller + DC notch filter. 9,252 LUTs, 12,488 FFs, 142 DSP48E1. 0.753 W.</li>
+          <li><strong>Build 24 (v0.1.5-cfar)</strong>: Prior production baseline. WNS +0.179 ns, WHS +0.056 ns. CA-CFAR detector (CA/GO/SO). 8,558 LUTs, 142 DSP48E1. 0.754 W.</li>
+          <li><strong>Build 21 (v0.1.4-build21)</strong>: Pre-CFAR baseline. WNS +0.156 ns, WHS +0.064 ns. FFT 4-cycle butterfly + barrel-shift twiddle. 139 DSP48E1 (-1). 0.732 W.</li>
+          <li><strong>Build 20 (v0.1.3-build20)</strong>: Prior production baseline. WNS +0.426 ns, WHS +0.058 ns. 400 MHz MMCM + CIC CREG pipeline. 0.730 W.</li>
+          <li><strong>Build 19</strong>: Failed (WNS -0.011 ns). Root cause: conflicting XDC generated clock prevented false-path application.</li>
+          <li><strong>Build 18 (v0.1.2-build18)</strong>: Prior baseline. WNS +0.062 ns, WHS +0.059 ns. 0.631 W.</li>
+          <li><strong>Build 17 (v0.1.1-build17)</strong>: FIR DSP48 pipelining + matched filter BRAM migration.</li>
+          <li>Remote Vivado build infrastructure on Ubuntu 24.04 with Vivado 2025.2, targeting XC7A200T-2FBG484I.</li>
+        </ul>
+      </article>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container"><p>Update this page at each major commit or bring-up gate.</p></div>
+  </footer>
+</body>
+</html>

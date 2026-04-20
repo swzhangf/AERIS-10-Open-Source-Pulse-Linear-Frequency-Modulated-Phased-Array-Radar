@@ -1,0 +1,19 @@
+[tasks]
+cover
+
+[options]
+cover: mode cover
+cover: depth 200
+
+[engines]
+smtbmc z3
+
+[script]
+read_verilog -formal cdc_modules.v
+read_verilog -formal fv_cdc_handshake.v
+prep -top fv_cdc_handshake
+clk2fflogic
+
+[files]
+../cdc_modules.v
+fv_cdc_handshake.v

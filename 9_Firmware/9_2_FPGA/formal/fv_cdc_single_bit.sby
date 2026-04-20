@@ -1,0 +1,22 @@
+[tasks]
+bmc
+cover
+
+[options]
+bmc: mode bmc
+bmc: depth 80
+cover: mode cover
+cover: depth 80
+
+[engines]
+smtbmc z3
+
+[script]
+read_verilog -formal cdc_modules.v
+read_verilog -formal fv_cdc_single_bit.v
+prep -top fv_cdc_single_bit
+clk2fflogic
+
+[files]
+../cdc_modules.v
+fv_cdc_single_bit.v

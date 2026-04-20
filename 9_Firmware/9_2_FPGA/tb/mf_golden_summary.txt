@@ -1,0 +1,74 @@
+========================================================================
+Matched Filter Golden Reference Summary
+Operation: output = IFFT( FFT(signal) * conj(FFT(reference)) )
+FFT length: 1024
+========================================================================
+
+------------------------------------------------------------------------
+Case 1: DC autocorrelation: signal=ref=DC(I=0x1000,Q=0). Expected: large peak at bin 0, zero elsewhere. Peak will saturate to 32767 due to 16-bit clamp.
+------------------------------------------------------------------------
+  Peak bin:              0
+  Peak magnitude (float):17179869184.000000
+  Peak I (float):        17179869184.000000
+  Peak Q (float):        0.000000
+  Peak I (quantized):    32767
+  Peak Q (quantized):    0
+  Files:
+    mf_golden_sig_i_case1.hex
+    mf_golden_sig_q_case1.hex
+    mf_golden_ref_i_case1.hex
+    mf_golden_ref_q_case1.hex
+    mf_golden_out_i_case1.hex
+    mf_golden_out_q_case1.hex
+
+------------------------------------------------------------------------
+Case 2: Tone autocorrelation: signal=ref=tone(bin 5, amp 8000). Expected: peak at bin 0 (autocorrelation peak at zero lag).
+------------------------------------------------------------------------
+  Peak bin:              0
+  Peak magnitude (float):65536183223.999985
+  Peak I (float):        65536183223.999985
+  Peak Q (float):        -0.000000
+  Peak I (quantized):    32767
+  Peak Q (quantized):    0
+  Files:
+    mf_golden_sig_i_case2.hex
+    mf_golden_sig_q_case2.hex
+    mf_golden_ref_i_case2.hex
+    mf_golden_ref_q_case2.hex
+    mf_golden_out_i_case2.hex
+    mf_golden_out_q_case2.hex
+
+------------------------------------------------------------------------
+Case 3: Shifted tone: signal=tone(bin 5), ref=tone(bin 5) delayed by 3 samples. Cross-correlation peak should shift to indicate the delay.
+------------------------------------------------------------------------
+  Peak bin:              253
+  Peak magnitude (float):65536183223.999992
+  Peak I (float):        0.000005
+  Peak Q (float):        65536183223.999992
+  Peak I (quantized):    0
+  Peak Q (quantized):    32767
+  Files:
+    mf_golden_sig_i_case3.hex
+    mf_golden_sig_q_case3.hex
+    mf_golden_ref_i_case3.hex
+    mf_golden_ref_q_case3.hex
+    mf_golden_out_i_case3.hex
+    mf_golden_out_q_case3.hex
+
+------------------------------------------------------------------------
+Case 4: Impulse autocorrelation: signal=ref=delta(n=0, I=0x7FFF). Expected: scaled delta at bin 0 (will saturate to 32767). All other bins should be zero.
+------------------------------------------------------------------------
+  Peak bin:              0
+  Peak magnitude (float):1073676289.000000
+  Peak I (float):        1073676289.000000
+  Peak Q (float):        0.000000
+  Peak I (quantized):    32767
+  Peak Q (quantized):    0
+  Files:
+    mf_golden_sig_i_case4.hex
+    mf_golden_sig_q_case4.hex
+    mf_golden_ref_i_case4.hex
+    mf_golden_ref_q_case4.hex
+    mf_golden_out_i_case4.hex
+    mf_golden_out_q_case4.hex
+

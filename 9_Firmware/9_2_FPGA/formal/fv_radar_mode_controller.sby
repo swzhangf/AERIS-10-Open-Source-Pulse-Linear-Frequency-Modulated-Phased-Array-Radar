@@ -1,0 +1,21 @@
+[tasks]
+bmc
+cover
+
+[options]
+bmc: mode bmc
+bmc: depth 200
+cover: mode cover
+cover: depth 600
+
+[engines]
+smtbmc z3
+
+[script]
+read_verilog -formal radar_mode_controller.v
+read_verilog -formal fv_radar_mode_controller.v
+prep -top fv_radar_mode_controller
+
+[files]
+../radar_mode_controller.v
+fv_radar_mode_controller.v

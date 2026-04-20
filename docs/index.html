@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AERIS-10 Engineering Docs</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="index.html">AERIS-10 Docs</a>
+      <nav>
+        <a href="architecture.html">Architecture</a>
+        <a href="implementation-log.html">Implementation Log</a>
+        <a href="bring-up.html">Bring-Up</a>
+        <a href="reports.html">Reports</a>
+        <a href="release-notes.html">Release Notes</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    <section class="hero">
+      <p class="eyebrow">Open-Source Phased Array Radar</p>
+      <h1>Engineering Documentation Site</h1>
+      <p>This site tracks architecture, validated implementation baselines, constraint cleanup progress, and pre-hardware bring-up readiness for AERIS-10.</p>
+      <div class="cta-row">
+        <a class="button" href="implementation-log.html">View Change Timeline</a>
+        <a class="button ghost" href="bring-up.html">Open Readiness Package</a>
+      </div>
+    </section>
+
+    <section class="stats-grid">
+      <article class="card stat notice">
+        <h2>Production Board USB</h2>
+        <p class="metric">FT2232H (USB 2.0)</p>
+        <p class="muted">50T production board uses FT2232H. FT601 USB 3.0 is available on 200T premium dev board only.</p>
+      </article>
+      <article class="card stat">
+        <h2>Tracked Timing Baseline</h2>
+        <p class="metric">WNS +0.058 ns</p>
+        <p class="muted">WHS +0.068, WPWS +0.684 after validated Build 16 XDC port</p>
+      </article>
+      <article class="card stat">
+        <h2>Regression Status</h2>
+        <p class="metric">MCU 15 / 15, FPGA 18 / 18</p>
+        <p class="muted">Host firmware regression plus FPGA unit and integration suites passing</p>
+      </article>
+      <article class="card stat">
+        <h2>Methodology State</h2>
+        <p class="metric">XDCB-5 = 0</p>
+        <p class="muted">Single documented TIMING-18 residue on `ft601_txe` async observation</p>
+      </article>
+      <article class="card stat">
+        <h2>Current Phase</h2>
+        <p class="metric">Pre-Hardware Readiness</p>
+        <p class="muted">Board-arrival smoke test, artifact inventory, and open-risk tracking prepared</p>
+      </article>
+    </section>
+
+    <section class="grid-2">
+      <article class="card">
+        <h2>What changed recently</h2>
+        <ul>
+          <li>Ported the validated Build 16 production-target XDC cleanup into the tracked repository.</li>
+          <li>Preserved positive post-route timing while clearing XDCB-5 and reducing methodology residue to a single documented item.</li>
+          <li>Validated the tracked branch with MCU host regression and FPGA regression/integration suites.</li>
+          <li>Refreshed the bring-up documentation into a pre-arrival readiness package for the FPGA module and carrier board.</li>
+          <li>Kept upstream ADAR1000 bulk imports out of the baseline pending selective, justified reuse only.</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h2>Documentation Map</h2>
+        <ul>
+          <li><a href="architecture.html">System and FPGA Architecture</a></li>
+          <li><a href="implementation-log.html">Detailed Engineering Change Log</a></li>
+          <li><a href="bring-up.html">Pre-Arrival Bring-Up Plan, Artifact Checklist, and Open Risks</a></li>
+          <li><a href="reports.html">Published reports, simulations, and artifact context</a></li>
+          <li><a href="release-notes.html">Release Notes by Key Commit</a></li>
+        </ul>
+      </article>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>AERIS-10 documentation published via GitHub Pages from <code>/docs</code>.</p>
+    </div>
+  </footer>
+</body>
+</html>

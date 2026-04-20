@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AERIS-10 Docs | Board-Day Worksheet</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="index.html">AERIS-10 Docs</a>
+      <nav>
+        <a href="architecture.html">Architecture</a>
+        <a href="implementation-log.html">Implementation Log</a>
+        <a href="bring-up.html">Bring-Up</a>
+        <a href="reports.html">Reports</a>
+        <a href="release-notes.html">Release Notes</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    <section class="hero">
+      <p class="eyebrow">Board-Day Execution</p>
+      <h1>Board-Day Worksheet</h1>
+      <p>Printable operator worksheet for the first FPGA module and carrier-board sessions. Use this alongside the bring-up plan and artifact inventory to capture evidence, pass/fail state, and blockers in real time.</p>
+      <div class="cta-row">
+        <a class="button" href="bring-up.html">Open Bring-Up Plan</a>
+        <a class="button ghost" href="reports.html">Open Artifact Inventory</a>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>Session metadata</h2>
+      <div class="table-wrap">
+        <table>
+          <tbody>
+            <tr><td>Date / Time</td><td></td><td>Operator</td><td></td></tr>
+            <tr><td>Carrier board revision</td><td></td><td>FPGA module revision</td><td></td></tr>
+            <tr><td>MCU firmware commit</td><td></td><td>FPGA bitstream / probes tag</td><td></td></tr>
+            <tr><td>Power supply setup</td><td></td><td>Ambient temperature</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>Pre-power checks</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Check</th>
+              <th>Expected evidence</th>
+              <th>Status</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Carrier jumpers / default straps reviewed</td><td>Documented against board notes</td><td></td><td></td></tr>
+            <tr><td>Module seating and connectors inspected</td><td>No bent pins, no obvious shorts, no cable strain</td><td></td><td></td></tr>
+            <tr><td>RF transmit path kept disabled for initial power-up</td><td>Safe GPIO / supply state confirmed</td><td></td><td></td></tr>
+            <tr><td>Chosen image set identified</td><td>Heartbeat, debug, or baseline image selected intentionally</td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>Power and configuration checks</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Step</th>
+              <th>Expected evidence</th>
+              <th>Status</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Initial power applied</td><td>Idle current within planned envelope, no thermal surprise</td><td></td><td></td></tr>
+            <tr><td>JTAG enumeration</td><td>Target device visible in hardware manager</td><td></td><td></td></tr>
+            <tr><td>Bitstream programming</td><td>DONE = HIGH, INIT_COMPLETE = asserted</td><td></td><td></td></tr>
+            <tr><td>Optional probes load</td><td>Expected ILA cores enumerate</td><td></td><td></td></tr>
+            <tr><td>Reset / heartbeat sanity</td><td>Deterministic reset release and status activity</td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>Firmware and control-path checks</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Check</th>
+              <th>Expected evidence</th>
+              <th>Status</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>USART3 bring-up log</td><td>Boot messages present with timestamps</td><td></td><td></td></tr>
+            <tr><td>AD9523 status</td><td>Status pins/logs indicate healthy clocking</td><td></td><td></td></tr>
+            <tr><td>ADF4382A TX/RX init</td><td>Initialization returns OK, lock states sensible</td><td></td><td></td></tr>
+            <tr><td>ADAR1000 communication</td><td>Scratchpad/readback passes on all devices</td><td></td><td></td></tr>
+            <tr><td>Temperature / health checks</td><td>No early overtemp, fault, or emergency shutdown</td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>FPGA data-path and USB checks</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Stage</th>
+              <th>Expected evidence</th>
+              <th>Status</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Raw ADC visibility</td><td>ILA or status evidence shows activity on expected clock</td><td></td><td></td></tr>
+            <tr><td>DDC / matched-filter activity</td><td>Valid strobes and non-flat outputs observed</td><td></td><td></td></tr>
+            <tr><td>USB framing sanity</td><td>Headers, payload length, and footer remain consistent</td><td></td><td></td></tr>
+            <tr><td>FT601 behavior</td><td>No obvious backpressure or bus-direction anomalies</td><td></td><td></td></tr>
+            <tr><td>Sustained streaming trial</td><td>No immediate lockup, framing drift, or reset event</td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="grid-2" style="margin-top:0.8rem;">
+      <article class="card">
+        <h2>Measurements to record</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Measurement</th>
+                <th>Observed value</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Carrier/module idle current</td><td></td><td></td></tr>
+              <tr><td>5V / 3V3 rails</td><td></td><td></td></tr>
+              <tr><td>LO lock indicators</td><td></td><td></td></tr>
+              <tr><td>ADAR temperatures</td><td></td><td></td></tr>
+              <tr><td>PA IDQ spot checks</td><td></td><td></td></tr>
+              <tr><td>USB enumeration / throughput notes</td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+      <article class="card">
+        <h2>Stop conditions encountered?</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Condition</th>
+                <th>Triggered</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Unexpected current or thermal rise</td><td></td><td></td></tr>
+              <tr><td>LO lock/readback disagreement</td><td></td><td></td></tr>
+              <tr><td>ADAR comm failure</td><td></td><td></td></tr>
+              <tr><td>USB framing or bus-direction anomaly</td><td></td><td></td></tr>
+              <tr><td>Reset / clock ambiguity</td><td></td><td></td></tr>
+              <tr><td>Other blocker</td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>Outcome</h2>
+      <div class="table-wrap">
+        <table>
+          <tbody>
+            <tr><td>Session result</td><td></td><td>Next image to use</td><td></td></tr>
+            <tr><td>Main blocker</td><td colspan="3"></td></tr>
+            <tr><td>Next action owner</td><td></td><td>Target completion</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container"><p>Use this worksheet together with the bring-up plan and artifact inventory so observations are captured consistently.</p></div>
+  </footer>
+</body>
+</html>

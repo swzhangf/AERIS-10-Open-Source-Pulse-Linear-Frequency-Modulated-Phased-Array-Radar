@@ -1,0 +1,21 @@
+[tasks]
+bmc
+cover
+
+[options]
+bmc: mode bmc
+bmc: depth 50
+cover: mode cover
+cover: depth 50
+
+[engines]
+smtbmc z3
+
+[script]
+read_verilog -formal range_bin_decimator.v
+read_verilog -formal fv_range_bin_decimator.v
+prep -top fv_range_bin_decimator
+
+[files]
+../range_bin_decimator.v
+fv_range_bin_decimator.v

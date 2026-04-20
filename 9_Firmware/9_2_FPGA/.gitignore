@@ -1,0 +1,12 @@
+# Simulation build artifacts
+*.vvp
+*.vcd
+tb/*.vvp
+tb/*.vcd
+
+# Vivado project files (managed separately)
+*.jou
+*.log
+*.str
+*.bit
+*.ltx

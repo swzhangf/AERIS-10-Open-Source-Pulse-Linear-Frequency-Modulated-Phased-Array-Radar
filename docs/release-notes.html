@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AERIS-10 Docs | Release Notes</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="index.html">AERIS-10 Docs</a>
+      <nav>
+        <a href="architecture.html">Architecture</a>
+        <a href="implementation-log.html">Implementation Log</a>
+        <a href="bring-up.html">Bring-Up</a>
+        <a href="reports.html">Reports</a>
+        <a href="release-notes.html">Release Notes</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    <section class="hero">
+      <p class="eyebrow">Traceability</p>
+      <h1>Release Notes by Key Commit</h1>
+      <p>Milestone notes keyed to major bring-up, debug, and documentation commits.</p>
+    </section>
+
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>Commit timeline</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Commit</th>
+              <th>Title</th>
+              <th>Impact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>TBD</code> <strong>v0.1.8-te0713-ft601-dev</strong></td>
+              <td>TE0713/TE0701 + UMFT601X-B FT601 integration dev bitstream</td>
+              <td>First timing-clean FT601 USB integration build for the Trenz + UMFT601X-B FMC LPC stack. Wrapper module (<code>radar_system_top_te0713_umft601x_dev</code>) instantiates the full <code>usb_data_interface</code> with synthetic test data (range/Doppler/CFAR packets). Timing closure achieved after fixing source-synchronous clock skew: replaced <code>set_output_delay</code> with <code>set_max_delay -datapath_only</code> for outputs, removed erroneous <code>set_input_delay</code> on output-only <code>ft601_be[*]</code>. WNS +0.059 ns, WHS +0.121 ns, DRC 0 errors. Strategy: <code>Performance_ExplorePostRoutePhysOpt</code>. Vivado 2025.2. Bitstream: <code>docs/artifacts/te0713-te0701-umft601x-dev-2026-03-21.bit</code>.</td>
+            </tr>
+            <tr>
+              <td><code>TBD</code> <strong>v0.1.7-te0713-heartbeat</strong></td>
+              <td>TE0713/TE0701 minimal heartbeat bring-up bitstream</td>
+              <td>Created a low-risk bring-up artifact for the Trenz TE0713 + TE0701 stack using <code>radar_system_top_te0713_dev</code> and <code>te0713_te0701_minimal.xdc</code>. Remote Vivado 2025.2 build completed with DRC 0 errors, WNS +17.863 ns, WHS +0.265 ns. Intended as the first board-day image before FT601 arrival and before any radar-path integration.</td>
+            </tr>
+            <tr>
+              <td><code>ed629e7</code> <strong>v0.1.6-mti</strong></td>
+              <td>Build 25: MTI canceller + DC notch filter integration</td>
+              <td>New production baseline. WNS +0.132 ns, WHS +0.058 ns. 9,252 LUTs (6.87%), 12,488 FFs (4.64%), 17 BRAM (4.66%), 142 DSP48E1 (19.19%), 0.753 W. New modules: mti_canceller.v (2-pulse canceller, H(z)=1-z^-1), DC notch filter (inline in system_top). Two new host registers: host_mti_enable (0x26), host_dc_notch_width (0x27). 23/23 FPGA, 20/20 MCU, 3/3 real-data co-sim exact match.</td>
+            </tr>
+            <tr>
+              <td><code>075ae1e</code> <strong>v0.1.5-cfar</strong></td>
+              <td>Build 24: CA-CFAR detector integration with pipelined noise computation</td>
+              <td>Prior production baseline. WNS +0.179 ns, WHS +0.056 ns. 8,558 LUTs, 10,384 FFs, 17 BRAM, 142 DSP48E1, 0.754 W. CA/GO/SO CFAR modes with BRAM magnitude buffer, sliding-window algorithm. Host-configurable guard/train/alpha/mode registers (0x21-0x25). Build 23 timing failure fixed by pipelining noise computation. 22/22 FPGA, 20/20 MCU.</td>
+            </tr>
+            <tr>
+              <td><code>e93bc33</code> <strong>v0.1.4-prod-fixes</strong></td>
+              <td>7 production-quality fixes: detection bugs, digital gain, watchdog, dead code removal</td>
+              <td>Detection sticky flag + magnitude lag fix, rename cfar&rarr;threshold_detect, host-configurable digital gain control (power-of-2 shift), Doppler/chirps mismatch protection (clamp + error flag), decimator watchdog timeout, bypass_mode dead code removal, range-mode register (0x20). Real-data co-sim framework added. 22/22 FPGA.</td>
+            </tr>
+            <tr>
+              <td><code>2efab23</code> <strong>v0.1.4-build21</strong></td>
+              <td>Build 21: FFT opts + E2E RTL fixes + Vivado DRC fix + MMCM LOCKED false_path fix</td>
+              <td>New production baseline. WNS +0.156 ns, WHS +0.064 ns, WPWS +0.361 ns. 6,192 LUTs (4.6%), 9,064 FFs (3.4%), 16 BRAM (4.4%), 139 DSP48E1 (18.8%), 0.732 W. Includes 4-cycle FFT butterfly (20% throughput), barrel-shift twiddle (-1 DSP), Vivado DRC multiple-driver fix for data_pending flags, MMCM LOCKED XDC false_path fix (-from &rarr; -through). 19/19 FPGA, 20/20 MCU.</td>
+            </tr>
+            <tr>
+              <td><code>0773001</code></td>
+              <td>E2E integration test + RTL fixes: mixer sequencing, USB data-pending flags, receiver toggle wiring</td>
+              <td>New 46-check E2E testbench (tb_system_e2e.v) across 12 groups. RTL fixes: TX/RX mixer enables mutually exclusive by FSM state, USB write FSM data_pending sticky flags with stream-control reset default 3'b001, STM32 toggle signal wiring for mode-00, dynamic frame detection. USB tests 21/22/56 and regression script PASS/FAIL parsing fixed. 19/19 FPGA, 20/20 MCU.</td>
+            </tr>
+            <tr>
+              <td><code>a3e1996</code></td>
+              <td>FFT engine: merge SHIFT into WRITE (4-cycle butterfly) + barrel-shift twiddle index</td>
+              <td>SHIFT state merged into WRITE for 5&rarr;4 cycle butterfly (20% throughput gain). Multiplier-based twiddle index replaced with barrel-shift (frees 1 DSP48). Verified via FFT testbench; no timing regression expected.</td>
+            </tr>
+            <tr>
+              <td><code>7cdfa48</code></td>
+              <td>Gap 2 GUI Settings: runtime chirp timing, stream control gating, status readback</td>
+              <td>Runtime-configurable chirp timing (6 new opcodes 0x10-0x15), stream control gating (opcode 0x04 now gates USB write FSM), CFAR threshold wiring (opcode 0x03 replaces hardcoded value), status readback (opcode 0xFF returns 7-word packet). 4 new TB test groups. 18/18 FPGA, 20/20 MCU regression.</td>
+            </tr>
+            <tr>
+              <td><code>e5d1b3c</code></td>
+              <td>Gap 4 USB Read Path: host-to-FPGA command path with toggle CDC</td>
+              <td>Wired FT601 read FSM cmd_* outputs through toggle CDC to clk_100m command decode registers. Host can now set radar mode, trigger chirps, set CFAR threshold, and control data streaming. 3 new TB test groups (55 checks). 18/18 FPGA regression.</td>
+            </tr>
+            <tr>
+              <td><code>c6103b3</code> <strong>v0.1.3-build20</strong></td>
+              <td>Gap 7 MMCM jitter cleaner + CIC CREG pipeline + XDC clock-name fix</td>
+              <td>Added 400 MHz MMCM for ADC clock jitter cleaning, CIC comb DSP48E1 CREG pipeline, and fixed XDC conflicting generated clock. Build 20: WNS +0.426 ns (7x improvement over Build 18). All timing met.</td>
+            </tr>
+            <tr>
+              <td><code>f3bbf77</code></td>
+              <td>Gap 3 Safety Architecture</td>
+              <td>IWDG watchdog, Emergency_Stop PA rail cutoff, temperature max guard, periodic IDQ re-read, emergency state ordering. 5 new MCU tests, 20/20 pass.</td>
+            </tr>
+            <tr>
+              <td><code>c87dce0</code></td>
+              <td>Gap 5 BRAM async reset fix</td>
+              <td>Fixed chirp memory loader BRAM async reset to use synchronous reset pattern per Xilinx UG901 guidelines.</td>
+            </tr>
+            <tr>
+              <td><code>3b7afba</code> <strong>v0.1.2-build18</strong></td>
+              <td>Build 18 production build</td>
+              <td>Production baseline: WNS +0.062 ns, WHS +0.059 ns. 6,088 LUTs, 8,946 FFs, 16 BRAM, 140 DSP48E1, 0.631 W.</td>
+            </tr>
+            <tr>
+              <td><code>ed6f79c</code> <strong>v0.1.1-build17</strong></td>
+              <td>FIR DSP48 pipelining + matched filter BRAM migration</td>
+              <td>Build 17 production build with DSP48 pipelining improvements.</td>
+            </tr>
+            <tr>
+              <td><code>c466021</code></td>
+              <td>Firmware bug sweep closure (B12-B17)</td>
+              <td>Closed the PA calibration, ADC buffer, DIAG macro, TIM3 PWM, and stale-diagnostic issues with additional MCU regression coverage.</td>
+            </tr>
+            <tr>
+              <td><code>49c9aa2</code></td>
+              <td>SPI platform fix plus FPGA B2/B3 timing work</td>
+              <td>Fixed the legacy platform SPI transmit-only path and landed chirp BRAM migration plus Doppler DSP48 pipelining work.</td>
+            </tr>
+            <tr>
+              <td><code>3b32f67</code></td>
+              <td>ADF4382A SPI and chip-select correctness</td>
+              <td>Fixed platform SPI ops wiring, added software-managed CS behavior, and widened SPI chip-select storage to handle STM32 pin values correctly.</td>
+            </tr>
+            <tr>
+              <td><code>3979693</code></td>
+              <td>Initial 8-firmware-bug closure with tests</td>
+              <td>Closed the LO init ordering, AD9523 sequencing, sync trigger, temperature timer, GPIO mapping, and related MCU issues with regression coverage.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>Tagged releases</h2>
+      <ul>
+        <li><strong>v0.1.7-te0713-heartbeat</strong> &mdash; TE0713/TE0701 first-power baseline. Minimal heartbeat top, DRC clean, WNS +17.863 ns, WHS +0.265 ns. Artifact tracked at <code>docs/artifacts/te0713-te0701-heartbeat-2026-03-21.bit</code>.</li>
+        <li><strong>v0.1.6-mti</strong> (ed629e7) &mdash; Current production baseline. WNS +0.132 ns, WHS +0.058 ns. MTI canceller + DC notch filter. 9,252 LUTs, 12,488 FFs, 142 DSP48E1, 17 BRAM. 0.753 W.</li>
+        <li><strong>v0.1.5-cfar</strong> (075ae1e) &mdash; Prior production baseline. WNS +0.179 ns. CA-CFAR detector (CA/GO/SO modes) with pipelined noise computation.</li>
+        <li><strong>v0.1.4-prod-fixes</strong> (e93bc33) &mdash; 7 production fixes + real-data co-sim framework. WNS same as Build 21 (simulation-only changes).</li>
+        <li><strong>v0.1.4-build21</strong> (2efab23) &mdash; Pre-CFAR production baseline. WNS +0.156 ns, WHS +0.064 ns. Includes FFT opts, E2E RTL fixes, Vivado DRC fix, MMCM LOCKED XDC fix. 139 DSP48E1 (-1 vs Build 20).</li>
+        <li><strong>v0.1.3-build20</strong> (c6103b3) &mdash; Prior production baseline. WNS +0.426 ns, all timing met. Includes Gaps 3, 5, 7.</li>
+        <li><strong>v0.1.2-build18</strong> (3b7afba) &mdash; Prior production baseline. WNS +0.062 ns.</li>
+        <li><strong>v0.1.1-build17</strong> (ed6f79c) &mdash; FIR DSP48 + BRAM migration build.</li>
+        <li><strong>v0.1.0-bringup</strong> &mdash; Initial bring-up tag.</li>
+      </ul>
+    </section>
+
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>Architectural gap status</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Gap</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>3</td><td>Safety Architecture</td><td>Done (f3bbf77)</td></tr>
+            <tr><td>5</td><td>BRAM Async Reset</td><td>Done (c87dce0)</td></tr>
+            <tr><td>7</td><td>400 MHz MMCM</td><td>Done (c6103b3, Build 20)</td></tr>
+            <tr><td>4</td><td>USB Read Path</td><td>Done (e5d1b3c)</td></tr>
+            <tr><td>2</td><td>GUI Settings</td><td>Done (7cdfa48)</td></tr>
+            <tr><td>6</td><td>CDC-15 USB Buses</td><td>Post-bring-up</td></tr>
+            <tr><td>1</td><td>CFAR Real Implementation</td><td>Done (075ae1e, Build 24 + MTI in ed629e7)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:0.8rem;">
+      <h2>Open in GitHub</h2>
+      <ul>
+        <li><a href="https://github.com/JJassonn69/PLFM_RADAR/commit/ed629e7" target="_blank" rel="noopener">ed629e7</a> MTI canceller + DC notch filter (v0.1.6-mti)</li>
+        <li><a href="https://github.com/JJassonn69/PLFM_RADAR/commit/075ae1e" target="_blank" rel="noopener">075ae1e</a> Build 24 report (v0.1.5-cfar)</li>
+        <li><a href="https://github.com/JJassonn69/PLFM_RADAR/commit/0745cc4" target="_blank" rel="noopener">0745cc4</a> Pipeline CFAR noise computation (timing fix)</li>
+        <li><a href="https://github.com/JJassonn69/PLFM_RADAR/commit/f71923b" target="_blank" rel="noopener">f71923b</a> Integrate CA-CFAR detector</li>
+        <li><a href="https://github.com/JJassonn69/PLFM_RADAR/commit/e93bc33" target="_blank" rel="noopener">e93bc33</a> Production fixes 1-7 (v0.1.4-prod-fixes)</li>
+        <li><a href="https://github.com/JJassonn69/PLFM_RADAR/commit/0b06436" target="_blank" rel="noopener">0b06436</a> Real-data co-simulation (v0.1.4-pre-fixes)</li>
+        <li><a href="https://github.com/JJassonn69/PLFM_RADAR/commit/2efab23" target="_blank" rel="noopener">2efab23</a> Build 21: FFT opts + DRC fix + XDC fix (v0.1.4-build21)</li>
+        <li><a href="https://github.com/JJassonn69/PLFM_RADAR/commit/0773001" target="_blank" rel="noopener">0773001</a> E2E test + RTL fixes</li>
+        <li><a href="https://github.com/JJassonn69/PLFM_RADAR/commit/a3e1996" target="_blank" rel="noopener">a3e1996</a> FFT engine optimizations</li>
+        <li><a href="https://github.com/JJassonn69/PLFM_RADAR/commit/7cdfa48" target="_blank" rel="noopener">7cdfa48</a> Gap 2 GUI Settings</li>
+        <li><a href="https://github.com/JJassonn69/PLFM_RADAR/commit/e5d1b3c" target="_blank" rel="noopener">e5d1b3c</a> Gap 4 USB Read Path</li>
+        <li><a href="https://github.com/JJassonn69/PLFM_RADAR/commit/c6103b3" target="_blank" rel="noopener">c6103b3</a> Gap 7 MMCM + CREG (v0.1.3-build20)</li>
+        <li><a href="https://github.com/JJassonn69/PLFM_RADAR/commit/f3bbf77" target="_blank" rel="noopener">f3bbf77</a> Gap 3 Safety Architecture</li>
+        <li><a href="https://github.com/JJassonn69/PLFM_RADAR/commit/c87dce0" target="_blank" rel="noopener">c87dce0</a> Gap 5 BRAM Reset</li>
+        <li><a href="https://github.com/JJassonn69/PLFM_RADAR/commit/c466021" target="_blank" rel="noopener">c466021</a> Firmware bugs B12-B17</li>
+        <li><a href="https://github.com/JJassonn69/PLFM_RADAR/commit/49c9aa2" target="_blank" rel="noopener">49c9aa2</a> SPI + FPGA timing</li>
+        <li><a href="https://github.com/JJassonn69/PLFM_RADAR/commit/3b32f67" target="_blank" rel="noopener">3b32f67</a> ADF4382A SPI</li>
+        <li><a href="https://github.com/JJassonn69/PLFM_RADAR/commit/3979693" target="_blank" rel="noopener">3979693</a> Initial 8-bug closure</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container"><p>Keep this page updated whenever major hardware validation milestones are merged.</p></div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,154 @@
+CERN Open Hardware Licence Version 2 - Permissive
+
+Preamble
+
+CERN has developed this licence to promote collaboration among
+hardware designers and to provide a legal tool for the dissemination
+of hardware designs. The CERN Open Hardware Licence Version 2 is
+available in two variants: Weakly Reciprocal (CERN-OHL-W) and
+Permissive (CERN-OHL-P). The CERN-OHL-P is for you if you want to
+maximise the ability of people to use your hardware design
+including for use in commercial applications with a minimum of
+obligations. It is a continuation of the CERN Open Hardware Licence
+version 1 (but with a new structure) and is focused more narrowly
+on the design itself and what you must do to give proper credit and
+to allow others to build and modify the design.
+
+Please see the CERN-OHL version 2 family page (www.ohwr.org/cernohl)
+for more information.
+
+Terms and conditions
+
+1. Definitions
+
+In this Licence, the following terms have the following meanings:
+
+“Additive” means something you add to the Design that was not part
+of it when it was first published by the Licensor.
+
+“Design” means the design documentation for the hardware that is
+licensed under this Licence, in any format or medium. It may
+include both the Hardware Description and the Modifications.
+
+“Documentation” means all the materials that are provided by the
+Licensor or any Contributor to describe the Design, including
+schematics, netlists, PCB layout files, bills of materials,
+drawings, specifications, and the like, and also includes the
+Modifications.
+
+“Hardware” means any physical device that embodies the Design or
+any part thereof, in any form.
+
+“Hardware Description” means the files that specify the Hardware in
+a form that can be read by a computer and that, when used
+appropriately, can be used to fabricate Hardware, for example in
+whole or in part.
+
+“Licence” means this licence (the CERN-OHL-P).
+
+“Licensor” means the person or entity that first publishes the
+Design under the terms of this Licence.
+
+“Modification” means any change to the Design, including changes to
+the Hardware Description.
+
+“Product” means either an unchanged Design or a Design with
+Modifications, that is offered for sale, or otherwise made
+available for commercial use, whether as Hardware or in other forms.
+
+“Source” means the format of the Design that is preferred for
+making Modifications, including all the files that are provided for
+that purpose.
+
+“You” means any person or entity that exercises any right under
+this Licence.
+
+2. What this Licence covers
+
+The Licensor grants you a worldwide, royalty-free, non-exclusive,
+perpetual licence to:
+
+a) use the Design and any associated Documentation,
+b) make Modifications,
+c) communicate the Design and any Documentation, including by
+   making it available for copying and modification,
+d) manufacture and distribute Hardware that implements the Design
+   or any part thereof,
+e) sell Products, and
+f) otherwise deal in the Design or any part thereof,
+
+all in each case subject to the conditions set out in this Licence.
+
+3. Conditions
+
+3.1. Availability of Source
+
+The Design and any Documentation that is made available under this
+Licence must be made available in Source format. If the Design is
+available in a format that is not Source, you must also make a
+version of the Design in Source format available, and you must
+inform others of how to obtain it.
+
+3.2. Retention of copyright and other notices
+
+You must retain all copyright and other notices that appear in the
+Design or Documentation.
+
+3.3. Notice of Modifications
+
+If you make Modifications, you must include a notice in any
+Distribution of the Design or Documentation, stating that
+Modifications have been made, by whom, and in what they consist.
+
+3.4. Distribution of Modifications
+
+If you distribute any Design or Documentation, whether unchanged or
+with Modifications, you must distribute it under this Licence, and
+you must inform the recipient that the Design or Documentation is
+licensed under this Licence.
+
+3.5. No implicit approval
+
+The Licensor shall not be taken to have approved any Modifications
+unless the Licessor expressly approves them in writing.
+
+4. Disclaimer of warranty
+
+THE DESIGN AND ANY DOCUMENTATION IS PROVIDED "AS IS" AND THE
+LICENSOR MAKES NO WARRANTY, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO WARRANTIES OF MERCHANTABILITY, SATISFACTORY QUALITY,
+NON-INFRINGEMENT, TITLE, AND FITNESS FOR A PARTICULAR PURPOSE. THE
+DESIGN MAY CONTAIN DESIGN DEFECTS OR ERRORS THAT MAKE IT
+UNSUITABLE FOR USE IN CERTAIN APPLICATIONS. THE ENTIRE RISK AS TO
+ITS QUALITY AND PERFORMANCE REMAINS WITH YOU.
+
+5. Limitation of liability
+
+TO THE EXTENT NOT PROHIBITED BY LAW, IN NO EVENT WILL THE LICENSOR
+BE LIABLE FOR ANY DAMAGES WHATSOEVER, INCLUDING WITHOUT LIMITATION
+LOST PROFITS, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR ANY
+OTHER LOSSES ARISING OUT OF THE USE OF THE DESIGN OR ANY
+DOCUMENTATION, HOWEVER CAUSED, WHETHER UNDER THEORY OF CONTRACT,
+TORT (INCLUDING NEGLIGENCE), PRODUCTS LIABILITY, OR OTHERWISE,
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+6. Termination
+
+This Licence is perpetual except that if you fail to comply with
+its terms, your rights under this Licence will terminate immediately.
+If you bring or defend any litigation or other claim alleging that
+the Design or any part thereof infringes any intellectual property
+right, all your rights under this Licence granted by the Licensor
+will terminate forty-five days after you bring or defend such claim.
+
+7. General
+
+This Licence shall be governed by the laws of the country of the
+Licensor, without reference to its conflict of laws provisions.
+If any part of this Licence is held to be invalid or unenforceable,
+the remaining parts shall remain in full force and effect.
+
+---------------------------------------------------------------------
+
+CERN-OHL-P is a variant of the CERN-OHL family. For more information
+see www.ohwr.org/cernohl.

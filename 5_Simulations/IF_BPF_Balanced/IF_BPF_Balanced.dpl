@@ -1,0 +1,47 @@
+<QucsStudio Schematic 5.8>
+<Properties>
+View=0.322868,-560.104,2421.58,860.11,0.996149,926,553
+Grid=10,10,0
+DataSet=*.dat
+DataDisplay=*.sch
+OpenDisplay=1
+showFrame=0
+FrameText0=Title \n @PATH@@FILE@
+FrameText1=Drawn By:
+FrameText2=Date: @DATE@
+FrameText3=Revision:
+</Properties>
+<Symbol>
+</Symbol>
+<Components>
+</Components>
+<Wires>
+</Wires>
+<Diagrams>
+<Rect 120 -290 360 220 31 #c0c0c0 1 00 1 0 5e-06 2e-05 1 -12.5602 5 7.43587 1 -1 0.5 1 -1 -1 -1 "" "" "">
+	<Legend 10 -100 0>
+	<"Vin_P.Vt" "" #0000ff 1 3 0 0 0 1 "">
+	<"Vout_P.Vt" "" #ff0000 1 3 0 0 0 1 "">
+</Rect>
+<Rect 1096 533 758 443 31 #c0c0c0 1 00 0 5e+07 2e+07 2e+08 1 -180.034 50 15.3266 1 -1 0.5 1 -1 -1 -1 "" "" "">
+	<Legend 10 -100 0>
+	<"dB(time2freq(Vout_P.Vt))" "" #0000ff 1 3 0 0 0 1 "">
+	  <Mkr 1.4e+08 504 -493 3 1 0 0 0 50>
+	<"dB(time2freq(Vin_P.Vt))" "" #ff0000 1 3 0 0 0 1 "">
+	  <Mkr 1.4e+08 194 -503 3 1 0 0 0 50>
+</Rect>
+<Rect 630 -300 360 220 31 #c0c0c0 1 00 0 0 2e-08 1e-07 1 -13.0727 10 13.0727 1 -1 0.5 1 -1 -1 -1 "" "" "">
+	<Legend 10 -100 0>
+	<"Vin_P.Vt" "" #00dcdc 1 3 0 0 0 1 "">
+	<"Vin_N.Vt" "" #ff0000 1 3 0 0 0 1 "">
+	<"Vout_P.Vt" "" #ff00ff 1 3 0 0 0 1 "">
+	<"Vout_N.Vt" "" #00dc00 1 3 0 0 0 1 "">
+</Rect>
+<Rect 146 523 758 443 31 #c0c0c0 1 00 0 5e+07 1e+07 2e+08 0 -0.2 0.2 2 1 -1 0.5 1 -1 -1 -1 "" "" "">
+	<Legend 10 -100 0>
+	<"time2freq(Vout_P.Vt-Vout_N.Vt)" "" #0000ff 1 3 0 0 0 1 "">
+	<"time2freq(Vin_P.Vt-Vin_N.Vt)" "" #ff0000 1 3 0 0 0 1 "">
+</Rect>
+</Diagrams>
+<Paintings>
+</Paintings>

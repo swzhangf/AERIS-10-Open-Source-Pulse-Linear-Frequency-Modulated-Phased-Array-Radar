@@ -1,0 +1,44 @@
+<QucsStudio Schematic 5.8>
+<Properties>
+View=-126.084,-20.8067,1030.12,640.756,1,79,87
+Grid=10,10,0
+DataSet=*.dat
+DataDisplay=*.sch
+OpenDisplay=1
+showFrame=0
+FrameText0=Title \n @PATH@@FILE@
+FrameText1=Drawn By:
+FrameText2=Date: @DATE@
+FrameText3=Revision:
+</Properties>
+<Symbol>
+</Symbol>
+<Components>
+</Components>
+<Wires>
+</Wires>
+<Diagrams>
+<Rect 100 240 360 220 31 #c0c0c0 1 00 1 0 1 1 1 0 1 1 1 0 1 1 -1 -1 -1 "" "" "">
+	<Legend 10 -100 0>
+	<"dB(S[1,1])" "" #0000ff 1 3 0 0 0 0 "">
+	<"dB(S[2,2])" "" #ff0000 1 3 0 0 0 0 "">
+</Rect>
+<Rect 100 540 360 220 31 #c0c0c0 1 00 1 2e+09 2e+09 1.2e+10 1 -66.8176 20 5.31153 1 -1 0.5 1 -1 -1 -1 "" "" "">
+	<Legend 10 -100 0>
+	<"dB(S[2,1])" "" #0000ff 1 3 0 0 0 0 "">
+	<"dB(S[3,1])" "" #ff0000 1 3 0 0 0 1 "">
+	<"dB(S[1,3])" "" #ff00ff 1 3 0 0 0 1 "">
+</Rect>
+<Rect 540 540 360 220 31 #c0c0c0 1 00 1 0 1 1 1 0 1 1 1 0 1 1 -1 -1 -1 "" "" "">
+	<Legend 10 -100 0>
+	<"dB(S[1,2])" "" #0000ff 1 3 0 0 0 0 "">
+</Rect>
+<Smith 540 240 220 220 31 #c0c0c0 1 00 1 0 1 1 1 0 1 1 1 0 1 1 -1 -1 -1 "" "" "">
+	<Legend 10 -100 0>
+	<"S[1,1]" "" #0000ff 1 3 0 0 0 0 "">
+	<"S[2,2]" "" #ff0000 1 3 0 0 0 0 "">
+	<"S[3,3]" "" #ff00ff 1 3 0 0 0 0 "">
+</Smith>
+</Diagrams>
+<Paintings>
+</Paintings>
